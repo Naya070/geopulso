@@ -1,0 +1,248 @@
+import tkinter as tk
+from tkinter import BOTH, DISABLED, END, RIGHT, Y, StringVar, ttk, Radiobutton
+from tkinter import messagebox
+from turtle import heading, width
+from tkinter import ttk
+from webbrowser import get
+from PIL import ImageTk, Image
+
+import tkinter.font as font
+
+from menu import Clase_menu
+from data_base import bd
+import mysql.connector
+
+
+
+class Login1(tk.Frame):   
+	
+	control_bd = bd() 
+
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent)  
+		
+
+		def wigets_login():
+
+			global entry_usuario_var
+			global entry_contrase_var
+
+			self.fondo = ImageTk.PhotoImage(Image.open("img/fondo.jpg"))
+			self.login = tk.PhotoImage(file="img/login.png")
+			self.label_fondo = tk.Label(self, image= self.fondo).pack(expand=True)
+
+			self.fondo1 = ImageTk.PhotoImage(Image.open("img/label.png"))
+			self.label_fondo1 = tk.Label(self, image= self.fondo1).pack(expand=True)
+			
+			self.fuente1 = font.Font(family= 'FreeSerif', size=20, weight='bold')
+
+			label_cuadro = tk.Label(self, bg="#ecf0f6").place(x=20, y=60, width=360, height=500)
+			label_login = tk.Label(self, image= self.login, bg="#ecf0f6").place(x=140, y=60)
+			self.ingrese_aqui = tk.Label(self, text="Ingrese Aquí", font= self.fuente1, bg="#ecf0f6", fg="#303452").place(x=110, y=170)
+			
+			#Componentes de la ventana de inicio de sesion
+			entry_usuario_var = StringVar()
+			entry_contrase_var = StringVar()
+
+			self.label_usuario = tk.Label(self, text="Usuario o correo", font=("Cambria", 15, "bold"), bg="#ecf0f6", fg="#303452").place(x=50, y=230)
+			self.label_contrase = tk.Label(self, text="Contraseña", font=("Cambria", 15, "bold"), bg="#ecf0f6", fg="#303452").place(x=50, y=330)
+			
+			self.entry_usuario = tk.Entry(self, textvariable = entry_usuario_var, font=("Cambria", 15, "bold")).place(x=50, y=270, width=290, height=30)
+			self.entry_contrase = tk.Entry(self, textvariable = entry_contrase_var, show='*', font=("Cambria", 15, "bold")).place(x=50, y=370, width=290, height=30)
+
+			self.button_acceder = tk.Button(self, text="Acceder", command = comprobar_datos, font=(
+				"Cambria", 15, "bold"), bg="#303452", fg="white", width=15, height=2).place(x=100, y=430)
+			self.button_registrar = tk.Button(self, text="Registrarse", command= registro, font=(
+				"Cambria", 15, "bold"), bg="white", fg="#303452", width=15, height=2).place(x=650, y=430)
+		
+
+		def salir():
+			self.master.destroy()
+			self.master.quit()
+		
+
+
+			#CREAMOS VENTANA PARA REGISTRO.
+		def registro():
+
+			ventana_registro = tk.Toplevel()
+			ventana_registro.configure(bg="#ecf0f6")
+			ventana_registro.title("Registro")
+			ventana_registro.geometry("320x400")
+		
+			global nombre_usuario
+			global clave
+			global clave_repetir
+			global nombres
+			global apellidos
+			global correo
+			global clave_acceso
+			
+			global entrada_nombre
+			global entrada_clave
+			
+			#Componentes de la ventana de registro de usuario
+
+			nombre_usuario = StringVar() #DECLARAMOS "string" COMO TIPO DE DATO PARA "nombre_usuario" y los otros datos.
+			clave = StringVar() 
+			clave_repetir = StringVar() 
+			nombres = StringVar() 
+			apellidos = StringVar() 
+			correo = StringVar() 
+			clave_acceso  = StringVar()
+		
+			
+			tk.Label(ventana_registro, text="Introduzca datos", bg="#ecf0f6", font=("Cambria", 12, "bold")).pack()
+			tk.Label(ventana_registro, text="", bg="#ecf0f6").pack()
+			etiqueta_nombre = tk.Label(ventana_registro, text="Nombre de usuario", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_nombre.pack()
+			entrada_nombre = tk.Entry(ventana_registro, textvariable=nombre_usuario, font=("Cambria", 12, "bold")) #ESPACIO PARA INTRODUCIR EL NOMBRE.
+			entrada_nombre.pack()
+			
+			etiqueta_clave = tk.Label(ventana_registro, text="Contraseña", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_clave.pack()
+			entrada_clave = tk.Entry(ventana_registro, textvariable=clave, show='*',font=("Cambria", 12, "bold")) #ESPACIO PARA INTRODUCIR LA CONTRASEÑA.
+			entrada_clave.pack()
+
+			etiqueta_clave_repetir = tk.Label(ventana_registro, text="Confirmar Contraseña", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_clave_repetir.pack()
+			entrada_clave_repetir = tk.Entry(ventana_registro, textvariable=clave_repetir, show='*',font=("Cambria", 12, "bold")) #ESPACIO PARA INTRODUCIR LA CONTRASEÑA.
+			entrada_clave_repetir.pack()
+
+			etiqueta_nombs = tk.Label(ventana_registro, text="Nombres", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_nombs.pack()
+			entrada_nombs = tk.Entry(ventana_registro, textvariable=nombres, font=("Cambria", 12, "bold")) #ESPACIO PARA INTRODUCIR EL NOMBRE.
+			entrada_nombs.pack()
+
+			etiqueta_apellidos = tk.Label(ventana_registro, text="Apellidos", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_apellidos.pack()
+			entrada_apellidos = tk.Entry(ventana_registro, textvariable=apellidos, font=("Cambria", 12, "bold")) 
+			entrada_apellidos.pack()
+
+			etiqueta_correo = tk.Label(ventana_registro, text="Correo", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_correo.pack()
+			entrada_correo = tk.Entry(ventana_registro, textvariable=correo, font=("Cambria", 12, "bold")) 
+			entrada_correo.pack()
+
+			etiqueta_clave_acceso = tk.Label(ventana_registro, text="Inserte clave de acceso*", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_clave_acceso.pack()
+			entrada_clave_acceso = tk.Entry(ventana_registro, textvariable=clave_acceso, show='*',font=("Cambria", 12, "bold")) #ESPACIO PARA INTRODUCIR LA CONTRASEÑA.
+			entrada_clave_acceso.pack()
+
+			tk.Label(ventana_registro, bg="#ecf0f6", text="").pack()
+			tk.Button(ventana_registro, text="Registrarse", width=10, height=1, bg="#ecf0f6", command = registro_usuario).pack() #BOTÓN "Registrarse"
+			
+			etiqueta_clave_acceso = tk.Label(ventana_registro, text="", bg="#ecf0f6", font=("Cambria", 12, "bold"))
+			etiqueta_clave_acceso.pack()
+			etiqueta_clave_acceso = tk.Label(ventana_registro, text="*Solicite clave al administrador", bg="#ecf0f6", font=("Cambria", 9, "bold"))
+			etiqueta_clave_acceso.pack()
+
+			
+		
+		def comprobar_datos():
+			print("entry_usuario_var:", entry_usuario_var.get())
+			global usuario
+
+			control_bd = bd() 
+			control_bd.colocar_usuario_escrito(entry_usuario_var.get())
+			
+			a = control_bd.buscar_usuario(entry_usuario_var.get())
+			#Busca si el usuario escrito existe en base de datos y de existir devuelve su id
+			#Si el usuario no existe devuelve 0
+			print("a:", a)
+			usuario_contrasenna = control_bd.comprobar_usuario(a)
+			#Busca usuario y password segun el id del usuario existente
+
+			for row in usuario_contrasenna:
+				usuario = row[0]
+				contrasenna = row[1]
+
+			if len(entry_usuario_var.get()) < 1:
+				messagebox.showinfo("ADVERTENCIA","Coloque el nombre de usuario")
+			
+			elif len(entry_contrase_var.get()) < 1:
+				messagebox.showinfo("ADVERTENCIA","Coloque la contraseña")
+
+			elif a ==0:
+				messagebox.showinfo("ADVERTENCIA","El usuario no existe")
+			
+			elif entry_contrase_var.get() != contrasenna:
+				messagebox.showinfo("ADVERTENCIA","Contraseña inválida")
+
+			else:
+				control_bd.colocar_usuario_escrito(entry_usuario_var.get())
+				#Subir a la base de datos el nombre ingresado del usuario escrito al hacer login
+				controller.show_frame(Clase_menu) # Entrar a la ventana principal
+				controller.protocol("WM_DELETE_WINDOW", salir)
+				usuario_loggeado()
+		
+
+		def usuario_loggeado():
+			return usuario
+
+
+
+		#REGISTRO DE USUARIO
+		def registro_usuario():
+			""""""
+			try:
+				connection = mysql.connector.connect(
+					host = 'localhost',
+					port = 3306,
+					user = 'root',
+					password = 'tupropiarana',
+					db = 'geopulso'
+				)
+
+			except Exception as ex:
+				pass  
+
+			cursor= connection.cursor()
+			cursor.execute("SELECT pass_acceso FROM geopulso.datos_extra WHERE datos_extra_id =1")
+			rows = cursor.fetchall()
+			for row in rows:
+				print(row[0])
+
+		
+			try:
+
+				if len(nombre_usuario.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque el nuevo nombre de usuario")
+
+				elif len(clave.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque la contraseña")
+
+				elif len(clave_repetir.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Confirme la contraseña")
+
+				elif len(nombres.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque sus nombres")
+
+				elif len(apellidos.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque sus apellidos")
+
+				elif len(correo.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque su correo")
+
+				elif len(clave_acceso.get()) < 1:
+					messagebox.showinfo("ADVERTENCIA","Coloque la clave de acceso, pidala al gerente de la empresa")
+					
+				elif clave.get() != clave_repetir.get():
+					messagebox.showinfo("ADVERTENCIA","Error en la confirmación de contraseña")
+
+				elif row[0] != clave_acceso.get():
+					messagebox.showinfo("ADVERTENCIA","Clave de acceso incorrecta")
+
+				else:
+					response = messagebox.askokcancel("AVISO","Se creará un nuevo usuario")
+					if response == True:
+						cursor.execute("INSERT INTO geopulso.acceso VALUES (NULL,'%s','%s','%s','%s','%s')" % (nombres.get(), apellidos.get(), nombre_usuario.get(), correo.get(), clave.get()))
+						connection.commit()
+						messagebox.showinfo("HECHO","Nuevo usuario creado")
+					if response == False:
+						pass
+			except:
+				messagebox.showwarning("ADVERTENCIA","Ocurrió un error al registrar usuario.")
+				pass
+		
+		wigets_login()
