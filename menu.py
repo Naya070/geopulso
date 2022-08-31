@@ -343,6 +343,7 @@ class Clase_clientes(tk.Frame):
     def __init__(self, parent, controller):
 		
         tk.Frame.__init__(self, parent) 
+        control_bd = bd()
         
         print("CLASE_CLIENTES") 
 
@@ -353,10 +354,6 @@ class Clase_clientes(tk.Frame):
         def salir():
             self.master.destroy()
             self.master.quit()
-
-        def ir_a_menu():
-            controller.show_frame(Clase_menu) # Entrar a la ventana principal
-            controller.protocol("WM_DELETE_WINDOW", salir)
         
 
         self.config(bg="#ecf0f6", width=2440, height=300)
@@ -389,7 +386,8 @@ class Clase_clientes(tk.Frame):
 
         self.anadir = tk.Button(self, text="Añadir cliente", command = self.anadir_cliente, width=15, height=2).place(x = 680, y = 250) 
         self.actualizar_b = tk.Button(self, text="Actualizar", command = self.actualizar, width=15, height=2).place(x = 865, y = 250)
-        self.eliminar = tk.Button(self, text="Eliminar cliente", command = self.actualizar, width=15, height=2).place(x = 800, y = 325)   
+        self.eliminar = tk.Button(self, text="Eliminar cliente", command = self.borrar, width=15, height=2).place(x = 680, y = 325) 
+        self.limpiar = tk.Button(self, text="Limpiar campos", command = self.limpiarCampos , width=15, height=2).place(x = 865, y = 325)  
 
         self.buscar = tk.Button(self, text="Buscar", command = self.busqueda, width=8, height=1).place(x=920, y=140)  
 
@@ -522,25 +520,14 @@ class Clase_clientes(tk.Frame):
 
 
     def mostrar(self): #Actualizar treeview luego de modificar
-            try:
-                self.connection = mysql.connector.connect(
-                    host = 'localhost',
-                    port = 3306,
-                    user = 'root',
-                    password = 'tupropiarana',
-                    db = 'geopulso'
-                )
-                
-            except Exception as ex:
-                print(ex)
-
-            cursor = self.connection.cursor()
+            
+            control_bd = bd()
+            datos_apt = control_bd.mostrar_clientes()
+            
             registros = self.tree.get_children()
             for elemento in registros:
                 self.tree.delete(elemento)
             try:
-                cursor.execute("SELECT * FROM clientes")
-                datos_apt = cursor.fetchall()
                 self.indice = 0
                 
                 for row in datos_apt:			
@@ -582,6 +569,7 @@ class Clase_clientes(tk.Frame):
             self.direccion_vivienda_var.set(self.tree.item(item, "values")[5])
             self.empresa_var.set(self.tree.item(item, "values")[6])
             self.direccion_empresa_var.set(self.tree.item(item, "values")[7])
+            self.textBox.delete('1.0','end')
             self.textBox.insert('end', self.tree.item(item, "values")[8])
 
             print("you clicked on", self.tree.item(item,"text"))
@@ -603,17 +591,47 @@ class Clase_clientes(tk.Frame):
                 print(ex)
 
             cursor = self.connection.cursor()
-            
+            print(1)
             try:
                 self.criterio = self.buscar_entry_var.get()
-                self.criterio = "%s" % self.criterio +"%"
-                self.datos = cursor.execute("SELECT id FROM clientes WHERE nombres LIKE '%s' OR apellidos LIKE '%s'" % (self.criterio, self.criterio))
-                for row in self.datos:
+                print(self.criterio)
+                self.criterio1 = "%s" % self.criterio +"%"
+                print(2)
+                cursor.execute("SELECT id_clientes FROM geopulso.clientes WHERE nombres LIKE '%s' OR apellidos LIKE '%s'" % (self.criterio1, self.criterio1))
+                print(3)
+                self.datos = cursor.fetchall()
+
+                #self.criterio = self.search_var.get()
+                iid_to_select = ()
+
+                #   if there's any sense in search
+                if self.criterio != '':
+                    #  get all tags from tkinter
+                    all_tags = self.master.tk.call(str(self.tree), "Id", "Nombres")
+
+                    #   sort tags by search query
+                    tags_to_select = tuple(filter(lambda tag: self.criterio.lower() in tag.lower(), all_tags))
+
+                    #   gather iids by tags to select
+                    for sorted_tag in tags_to_select:
+                        iid_to_select += self.tree.tag_has(sorted_tag)
+
+                #   setting selection by iids
+                self.tree.selection_set(iid_to_select)
+
+
+                """for row in self.datos:
                     self.row_id = row[0]-1
+                    print("row:", row)
+                    print("self.row_id:", self.row_id)
                 self.tree.selection_set(self.tree.tag_has(self.row_id)) # move selection
+                print(4)
                 self.tree.selection_set(self.row_id) # move selection
+                print(5)
                 self.tree.focus(self.row_id) # move focus
+                print(6)
                 self.tree.see(self.row_id) # scroll to show it
+                print(7)"""
             except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
                 pass
@@ -625,27 +643,15 @@ class Clase_clientes(tk.Frame):
 
 
     def anadir_cliente(self):
-        try:
-                self.connection = mysql.connector.connect(
-                    host = 'localhost',
-                    port = 3306,
-                    user = 'root',
-                    password = 'tupropiarana',
-                    db = 'geopulso'
-                )
-                
-        except Exception as ex:
-                print(ex)
+        control_bd = bd()
 
-        cursor = self.connection.cursor()
         try:
-            self.datos = self.nombres_var.get(), self.apellidos_var.get(), self.cedula_var.get(), self.telefono_var.get(), self.correo_var.get(), self.direccion_vivienda_var.get(), self.empresa_var.get(), self.direccion_empresa_var.get(), self.textBox.get(1.0, tk.END+"-1c")
-            print(self.datos)
-
-            cursor.execute("""INSERT INTO `geopulso`.`clientes` (`nombres`, `apellidos`,
-            `cedula`, `telefono`, `correo`, `direccion_vivienda`, `empresa`, `direccion_empresa`, `comentarios`) 
-            VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"""  % (self.datos) )
-            messagebox.showwarning("ADVERTENCIA","Cliente anadido")
+            if self.nombres_var.get() == '' or self.apellidos_var.get()=='':
+                messagebox.showwarning("ADVERTENCIA","Debe introducir nombre y apellido del cliente")
+            else:
+                datos = self.nombres_var.get(), self.apellidos_var.get(), self.cedula_var.get(), self.telefono_var.get(), self.correo_var.get(), self.direccion_vivienda_var.get(), self.empresa_var.get(), self.direccion_empresa_var.get(), self.textBox.get(1.0, tk.END+"-1c")
+                control_bd.anadir_cli_bd(datos)
+                messagebox.showinfo("REALIZADO","Cliente anadido")
         
         except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir cliente")
@@ -657,46 +663,25 @@ class Clase_clientes(tk.Frame):
 
 
     def actualizar(self):
+            control_bd = bd()
             try:
-                self.connection = mysql.connector.connect(
-                    host = 'localhost',
-                    port = 3306,
-                    user = 'root',
-                    password = 'tupropiarana',
-                    db = 'geopulso'
-                )
-                
-            except Exception as ex:
-                print(ex)
-            cursor = self.connection.cursor()
-            #datos_apt = cursor.execute("SELECT * FROM Datos_por_apartamento")
-            #for row in datos_apt:
-            #	print(row)
-
-            try:
-
-                self.s1= self.nombres_var.get()
-                self.s2= self.apellidos_var.get()
-                self.s3=self.cedula_var.get()
-                self.s4=self.telefono_var.get()
-                self.s5=self.correo_var.get()
-                self.s6=self.direccion_vivienda_var.get()
-                self.s7=self.empresa_var.get()
-                self.s8=self.direccion_empresa_var.get()
-                self.s9=self.textBox.get(1.0, tk.END+"-1c")
-                
-                
-                cursor.execute("""UPDATE clientes
-                            SET nombres=?, apellidos=?, cedula=?, telefono=?, 
-                            correo=?, direccion_vivienda=?, empresa=?, direccion_empresa=?, 
-                            comentarios=? WHERE id_clientes=?""",
-                            (self.s1, self.s2, self.s3, self.s4, self.s5, self.s6, self.s7, 
-                            self.s8, self.s9, self.id_c))
-
-                self.connection.commit()
-
+                datos_actualizar = self.nombres_var.get(), self.apellidos_var.get(), self.cedula_var.get(),self.telefono_var.get(), self.correo_var.get(), self.direccion_vivienda_var.get(), self.empresa_var.get(), self.direccion_empresa_var.get(), self.textBox.get(1.0, tk.END+"-1c"), self.id_c 
+                control_bd.actualizar_cliente(datos_actualizar)
             except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error al actualizar el registro")
                 pass
             self.limpiarCampos()
             self.mostrar()
+
+        
+    def borrar(self):
+        control_bd = bd()
+        try:
+            if messagebox.askyesno(message="¿Realmente desea eliminar el registro?", title="ADVERTENCIA"):
+                control_bd.borrar_cliente(self.id_c)
+        except:
+            messagebox.showwarning("ADVERTENCIA","Ocurrió un error al tratar de eliminar el registro")
+            pass
+
+        self.limpiarCampos()
+        self.mostrar()

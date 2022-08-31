@@ -95,5 +95,38 @@ class bd:
         
         return nom_apell_us
 
+
+        # FUNCIONES CLIENTES
+
+    def mostrar_clientes(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM clientes")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def busqueda_clientes(self):
+        cursor= self.connection.cursor()
+        pass
+
+    def anadir_cli_bd(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("""INSERT INTO `geopulso`.`clientes` (`nombres`, `apellidos`,
+                `cedula`, `telefono`, `correo`, `direccion_vivienda`, `empresa`, `direccion_empresa`, `comentarios`) 
+                VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"""  % (datos) )
+        self.connection.commit()
+
+    def actualizar_cliente(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`clientes` SET `nombres` = '%s', `apellidos`='%s', `cedula`='%s', `telefono`='%s', `correo`='%s', `direccion_vivienda`='%s', `empresa`='%s', `direccion_empresa`='%s', `comentarios`='%s'  WHERE (`id_clientes` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def borrar_cliente(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM `geopulso`.`clientes` WHERE (`id_clientes` = '%s')" % (id_c))
+        self.connection.commit()
+
+
+
+
         
         
