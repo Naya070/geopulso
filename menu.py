@@ -528,14 +528,14 @@ class Clase_clientes(tk.Frame):
             for elemento in registros:
                 self.tree.delete(elemento)
             try:
-                self.indice = 0
-                
+                self.indice= 1
                 for row in datos_apt:			
                     self.tree.tag_configure("gray90", background="gray90")
                     self.tree.tag_configure("white", background="white")
                     color = "white" if self.indice % 2 else "gray90"
+                    id_cliente = row[0]
                     
-                    self.tree.insert("",END, tag=('fuente', color), iid=self.indice, text = row[0], values =(row[1], 
+                    self.tree.insert("",END, tag=('fuente', color), iid=id_cliente, text = row[0], values =(row[1], 
                     row[2],row[3], row[4], row[5],row[6], row[7],row[8], row[9]))
                     self.indice= self.indice+1
                             
@@ -578,60 +578,27 @@ class Clase_clientes(tk.Frame):
             #self.tree.selection_set('0')
 			
     def busqueda(self):
-            try:
-                self.connection = mysql.connector.connect(
-                    host = 'localhost',
-                    port = 3306,
-                    user = 'root',
-                    password = 'tupropiarana',
-                    db = 'geopulso'
-                )
-                
-            except Exception as ex:
-                print(ex)
+            control_bd = bd()
+            
 
-            cursor = self.connection.cursor()
-            print(1)
             try:
                 self.criterio = self.buscar_entry_var.get()
                 print(self.criterio)
                 self.criterio1 = "%s" % self.criterio +"%"
-                print(2)
-                cursor.execute("SELECT id_clientes FROM geopulso.clientes WHERE nombres LIKE '%s' OR apellidos LIKE '%s'" % (self.criterio1, self.criterio1))
-                print(3)
-                self.datos = cursor.fetchall()
+                self.datos = control_bd.busqueda_clientes(self.criterio1)
 
-                #self.criterio = self.search_var.get()
-                iid_to_select = ()
-
-                #   if there's any sense in search
-                if self.criterio != '':
-                    #  get all tags from tkinter
-                    all_tags = self.master.tk.call(str(self.tree), "Id", "Nombres")
-
-                    #   sort tags by search query
-                    tags_to_select = tuple(filter(lambda tag: self.criterio.lower() in tag.lower(), all_tags))
-
-                    #   gather iids by tags to select
-                    for sorted_tag in tags_to_select:
-                        iid_to_select += self.tree.tag_has(sorted_tag)
-
-                #   setting selection by iids
-                self.tree.selection_set(iid_to_select)
-
-
-                """for row in self.datos:
-                    self.row_id = row[0]-1
-                    print("row:", row)
-                    print("self.row_id:", self.row_id)
-                self.tree.selection_set(self.tree.tag_has(self.row_id)) # move selection
-                print(4)
-                self.tree.selection_set(self.row_id) # move selection
-                print(5)
-                self.tree.focus(self.row_id) # move focus
-                print(6)
-                self.tree.see(self.row_id) # scroll to show it
-                print(7)"""
+                if self.criterio1 == '':
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                if self.criterio1 != '':
+                    numeros = []
+                    for row in self.datos:
+                        numeros.append(row[0])
+                        self.row_id = row[0]
+                    self.tree.selection
+                    self.tree.selection_set(self.tree.tag_has(self.row_id))
+                    self.tree.selection_set(numeros) # move selection
+                    self.tree.focus(self.row_id) # move focus
+                    self.tree.see(self.row_id)
             except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
                 pass

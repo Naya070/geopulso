@@ -104,9 +104,11 @@ class bd:
         datos_apt = cursor.fetchall()
         return datos_apt
 
-    def busqueda_clientes(self):
+    def busqueda_clientes(self, criterio1):
         cursor= self.connection.cursor()
-        pass
+        cursor.execute("SELECT id_clientes FROM geopulso.clientes WHERE nombres LIKE '%s' OR apellidos LIKE '%s'" % (criterio1, criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
 
     def anadir_cli_bd(self, datos):
         cursor = self.connection.cursor()
