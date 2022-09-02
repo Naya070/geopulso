@@ -71,6 +71,17 @@ class bd:
         for self.row in self.id_usuario:
             id_usuarioLogin = self.row[0]
         return id_usuarioLogin
+
+    def obtener_log(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT pass_acceso FROM geopulso.datos_extra WHERE datos_extra_id =1")
+        rows = cursor.fetchall()
+        return rows
+
+    def crear_nuevo_usuario(self, nombres, apellidos, nombre_usuario, correo, clave):
+        cursor= self.connection.cursor()
+        cursor.execute("INSERT INTO geopulso.acceso VALUES (NULL,'%s','%s','%s','%s','%s')" % (nombres, apellidos, nombre_usuario, correo, clave))
+        self.connection.commit()
 	
     
     #Funciones de menu
@@ -127,6 +138,78 @@ class bd:
         cursor.execute("DELETE FROM `geopulso`.`clientes` WHERE (`id_clientes` = '%s')" % (id_c))
         self.connection.commit()
 
+
+
+
+
+
+# FUNCIONES EMPLEADOS
+
+    def mostrar_empleados(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM empleados")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def busqueda_empleados(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_empleados FROM geopulso.empleados WHERE nombres LIKE '%s' OR apellidos LIKE '%s'" % (criterio1, criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def anadir_empl_bd(self, datos):
+        print(datos)
+        cursor = self.connection.cursor()
+        print(1)
+        cursor.execute("INSERT INTO `geopulso`.`empleados` (`nombres`, `apellidos`, `cargo`, `cedula`, `telefono`, `correo`, `direccion`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"  % (datos))
+        print(2)
+        self.connection.commit()
+        print(3)
+
+    def actualizar_empleados(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`empleados` SET `nombres` = '%s', `apellidos`='%s', `cargo`='%s', `cedula`='%s', `telefono`='%s', `correo`='%s', `direccion`='%s', `comentarios`='%s'  WHERE (`id_empleados` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def borrar_empleados(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM `geopulso`.`empleados` WHERE (`id_empleados` = '%s')" % (id_c))
+        self.connection.commit()
+
+
+
+# FUNCIONES PROVEEDORES
+
+    def mostrar_proveedores(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM proveedores")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def busqueda_proveedores(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_proveedores FROM geopulso.proveedores WHERE nombre_empresa LIKE '%s' OR nombre_contacto LIKE '%s'" % (criterio1, criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def anadir_pro_bd(self, datos):
+        print(datos)
+        cursor = self.connection.cursor()
+        print(1)
+        cursor.execute("INSERT INTO `geopulso`.`proveedores (`nombre_empresa`, `producto_servicio`, `nombre_contacto`, `cargo_contacto`, `telefono`, `correo`, `rif`, `sitio_web`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"  % (datos))
+        print(2)
+        self.connection.commit()
+        print(3)
+
+    def actualizar_proveedores(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`proveedores` SET `nombre_empresa` = '%s', `producto_servicio`='%s', `nombre_contacto`='%s', `cargo_contacto`='%s', `telefono`='%s', `correo`='%s', `rif`='%s', `sitio_web`='%s', `comentarios`='%s'  WHERE (`id_proveedores` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def borrar_proveedores (self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM `geopulso`.`proveedores` WHERE (`id_proveedores` = '%s')" % (id_c))
+        self.connection.commit()
 
 
 
