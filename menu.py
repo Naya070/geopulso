@@ -1301,3 +1301,221 @@ class Clase_proveedores(tk.Frame):
 
         self.limpiarCampos()
         self.mostrar()
+
+
+
+#CLASE MATERIAL
+
+class Clase_material(tk.Frame): 
+    
+    def __init__(self, parent, controller):
+		
+        tk.Frame.__init__(self, parent) 
+        control_bd = bd()
+        
+        print("CLASE_MATERIAL") 
+
+
+        def mientras():
+            pass
+        
+        def salir():
+            self.master.destroy()
+            self.master.quit()
+        
+
+        self.config(bg="#ecf0f6", width=2440, height=300)
+
+        self.frame_fondo = tk.Frame(self)
+        self.frame_fondo.pack(expand=True)
+        self.frame_fondo.config(bg="blue", width=1440, height=500)
+            
+
+        #self.fondo = ImageTk.PhotoImage(Image.open("img/fondo_azul.jpg"))
+        
+        self.frame_0 = tk.Frame(self.frame_fondo)
+        self.frame_0.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
+        self.frame_0.config(bg="salmon", width=500, height=100)
+        
+        #self.frame_1 = tk.Frame(self.frame_fondo)
+        #self.frame_1.pack( side=tk.LEFT, expand=True)
+        #self.frame_1.config(bg="green", width=50, height=70)
+
+        self.frame_2 = tk.Frame(self.frame_fondo)
+        self.frame_2.pack(fill=tk.BOTH, side=tk.RIGHT, expand=True)
+        self.frame_2.config(bg="yellow", width=400, height=700)
+
+        #self.frame_3 = tk.Frame(self.frame_1)
+        #self.frame_3.pack(fill=tk.BOTH, side=tk.BOTTOM, expand=True)
+        #self.frame_3.config(bg="white", width=20, height=20)
+
+        """self.label_a= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_a.place(x=10, y=90, width=350, height= 300)
+
+        self.label_b= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_b.place(x=365,y=90, width=290, height= 300)
+
+        self.label_c= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_c.place(x=660,y=90, width=355, height= 300)"""
+
+                #Buttons
+        self.button_proyectos = tk.Button(self, text="Proyectos", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20, height=1 ).place(x = 0, y = 0)      
+        self.button_proveedores = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
+        self.button_material = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
+        self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
+        self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
+        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
+
+        self.anadir = tk.Button(self, text="Añadir proveedor",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 590) 
+        self.actualizar_b = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 590)
+        self.eliminar = tk.Button(self, text="Eliminar proveedor", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=2).place(x = 680, y = 650) 
+        self.limpiar = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 650)  
+        
+        self.anadir_ca= tk.Button(self, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 15, y = 250) 
+        self.actualizar_ca = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 170, y = 250)
+        self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=2).place(x = 325, y = 250) 
+        self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 480, y = 250)  
+
+        self.buscar = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=920, y=140) 
+
+        self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=530, y=140) 
+
+
+                #Labels
+        self.agregar_categoria= tk.Label(self, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
+        self.gestion_producto= tk.Label(self, text="Gestion de producto", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
+            
+        self.categoria_id = tk.Label(self, text="ID de la Categoria:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=145)  
+        self.categoria_nombre = tk.Label(self, text="Nombre de la categoria:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=195)
+        
+        
+        
+        self.id_producto = tk.Label(self, text="ID producto:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=640, y=190)
+        self.telefono = tk.Label(self, text="Categoria:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=640, y=230)
+        self.telefono = tk.Label(self, text="Producto:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=640, y=270)
+        #self.correo= tk.Label(self, text="Telefono:", font=("Arial"), bg="#f3fbfe", fg="#303452" ).place(x=13, y=320) 
+
+        #self.direccion_vivienda = tk.Label(self, text="Correo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=120)
+        #self.empresa = tk.Label(self, text="RIF:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=170)
+        #self.direccion_empresa = tk.Label(self, text="Sitio web:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=220)
+            
+        #self.comentarios= tk.Label(self, text="Comentarios:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=270)
+            
+                #Entry
+            
+            
+            
+        self.nombre_empresa_var = StringVar()
+        self.producto_servicio_var = StringVar()
+        self.nombre_contacto_var = StringVar()
+        self.cargo_contacto_var = StringVar()
+        self.telefono_var = StringVar()
+        self.correo_var = StringVar()
+        self.rif_var = StringVar()
+        self.sitio_web_var = StringVar()
+        #self.comentarios_var = StringVar()
+            
+
+        self.buscar_entry_var = StringVar()
+            
+
+
+
+            
+        self.categoria_id_entry = tk.Entry(self, textvariable= self.nombre_empresa_var).place(x=270, y=145, width=250)
+        self.categoria_nombre_entry= tk.Entry(self, textvariable= self.producto_servicio_var).place(x=270, y=195, width=250)
+        #self.nombre_contacto_entry = tk.Entry(self, textvariable= self.cargo_contacto_var).place(x=15, y=245, width=250)
+        #self.cargo_contacto_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=295, width=250)
+        #self.telefono_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=345, width=250)
+
+        #self.correo_entry= tk.Entry(self, textvariable= self.correo_var).place(x=370, y=145, width=250)
+        #self.rif_entry = tk.Entry(self, textvariable= self.rif_var).place(x=370, y=195, width=250)
+        #self.sitio_web_entry = tk.Entry(self, textvariable= self.sitio_web_var).place(x=370, y=245, width=250)
+
+        #Comentarios
+        #self.textBox=tk.Text(self, height=6, width=35) 
+        #self.textBox.place(x=370, y=295)
+        #self.textBox.get('1.0','end')
+            
+            
+            
+        self.buscar = tk.Label(self, text="Buscar", font=("Arial"),
+                                bg="#f9fdff", fg="#303452", width=6, height=1).place(x=640, y=120)
+
+        self.buscar_entry = tk.Entry(self, textvariable= self.buscar_entry_var).place(x=640, y=145, width=250)
+
+            # Frame del treeview
+        self.frame_treeview = tk.Frame(self.frame_fondo)
+        self.frame_treeview.pack(fill=tk.Y, side=tk.BOTTOM)
+        self.frame_treeview.config(bg="white", width=20, height=30)
+
+        style = ttk.Style()
+        style.configure("mystyle.Treeview",
+            background = "red",
+            foreground = "#303452",
+            rowheight = 30,
+            fieldbackground = "white"
+        )
+
+                    # Set the treeview
+        self.tree = ttk.Treeview(self.frame_treeview, style="mystyle.Treeview", height=12)
+
+        self.treexscroll = tk.Scrollbar(self.frame_treeview, orient=tk.HORIZONTAL)
+        self.treexscroll.pack(fill=tk.X, side=tk.BOTTOM)
+            # configurar scrollbar
+        self.treexscroll.config(command=self.tree.xview)
+
+        self.treeyscroll = tk.Scrollbar(self.frame_treeview, orient=tk.VERTICAL)
+        self.treeyscroll.pack(fill=tk.Y, side=tk.RIGHT)
+            # configurar scrollbar
+        self.treeyscroll.config(command=self.tree.yview)
+
+            # TREEVIEW
+        self.tree.config(xscrollcommand=self.treexscroll.set, yscrollcommand=self.treeyscroll.set, 
+        columns=(
+                    "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"))
+
+        
+        self.tree.column("#0", width=150, stretch= False)
+        self.tree.column("col1", width=150, stretch= False)
+        self.tree.column("col2", width=150, stretch= False)
+        self.tree.column("col3", width=150, stretch= False)
+        self.tree.column("col4", width=160, stretch= False)
+        self.tree.column("col5", width=150, stretch= False)
+        self.tree.column("col6", width=150, stretch= False)
+        self.tree.column("col7", width=150, stretch= False)
+        self.tree.column("col8", width=150, stretch= False)
+        self.tree.column("col9", width=150, stretch= False)
+            
+        
+
+            
+        self.tree.heading("#0", text="Id", anchor=tk.CENTER)
+        self.tree.heading("col1", text="Nombre de la empresa", anchor=tk.CENTER)
+        self.tree.heading("col2", text="Producto o servicio", anchor=tk.CENTER)
+        self.tree.heading("col3", text="Nombre del contacto de la empresa", anchor=tk.CENTER)
+        self.tree.heading("col4", text="Cargo del contacto de la empresa", anchor=tk.CENTER)
+        self.tree.heading("col5", text="Telefono", anchor=tk.CENTER)
+        self.tree.heading("col6", text="Correo", anchor=tk.CENTER)
+        self.tree.heading("col7", text= "RIF", anchor=tk.CENTER)
+        self.tree.heading("col8", text="Sitio web", anchor=tk.CENTER)
+        self.tree.heading("col9", text="Comentarios", anchor=tk.CENTER)
+            
+            
+
+        self.tree.pack()
+        self.treeview = self.tree
+            
+        self.id = 0
+        self.iid = 0
+
+        #self.mostrar()
+            
+            
+        #self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick)
+        #self.tree.bind('<<TreeviewSelect>>', self.bindings)
+
+
+
+
+    

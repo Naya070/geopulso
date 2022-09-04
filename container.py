@@ -19,7 +19,7 @@ from openpyxl.styles import Font, Border, Side, Alignment
 from fpdf import FPDF
 
 #from clientes import Clase_clientes
-from menu import Login1, Clase_menu, Clase_clientes, Clase_empleados, Clase_proveedores
+from menu import Login1, Clase_menu, Clase_clientes, Clase_empleados, Clase_proveedores, Clase_material
 
 
 
@@ -46,7 +46,7 @@ class PageContainer(tk.Tk):
 
 		self.frame = {}
 
-		for F in (Login1, Clase_menu, Clase_clientes, Clase_empleados, Clase_proveedores):
+		for F in (Login1, Clase_menu, Clase_clientes, Clase_empleados, Clase_proveedores, Clase_material):
 
 			frame = F(container, self)
 
@@ -54,7 +54,7 @@ class PageContainer(tk.Tk):
 
 			frame.grid(row = 0, column = 0, sticky = "nsew") 
 
-		self.show_frame(Clase_menu)
+		self.show_frame(Clase_material)
 
 	def show_frame(self, cont):
 

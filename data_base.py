@@ -161,7 +161,9 @@ class bd:
         print(datos)
         cursor = self.connection.cursor()
         print(1)
-        cursor.execute("INSERT INTO `geopulso`.`empleados` (`nombres`, `apellidos`, `cargo`, `cedula`, `telefono`, `correo`, `direccion`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"  % (datos))
+        #cursor.execute("INSERT INTO `geopulso`.`empleados` (`id_empleados`, `nombres`, `apellidos`, `cargo`, `cedula`, `telefono`, `correo`, `direccion`, `comentarios`) VALUES ('2', 'Maribel', 'Landaeta', 'Secretaria', '10243556', '04164552298', 'landaMar@gmail.com', 'En su casa', 'Hola')")
+        
+        cursor.execute("INSERT INTO `geopulso`.`empleados` (`nombres`, `apellidos`, `cargo`, `cedula`, `telefono`, `correo`, `direccion`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (datos) )
         print(2)
         self.connection.commit()
         print(3)
@@ -195,20 +197,17 @@ class bd:
     def anadir_pro_bd(self, datos):
         print(datos)
         cursor = self.connection.cursor()
-        print(1)
-        cursor.execute("INSERT INTO `geopulso`.`proveedores (`nombre_empresa`, `producto_servicio`, `nombre_contacto`, `cargo_contacto`, `telefono`, `correo`, `rif`, `sitio_web`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"  % (datos))
-        print(2)
+        cursor.execute("""INSERT INTO geopulso.proveedores (`nombre_empresa`, `producto_servicio`, `nombre_contacto`, `cargo_contacto`, `telefono`, `correo`, `rif`, `sitio_web`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
         self.connection.commit()
-        print(3)
 
     def actualizar_proveedores(self, datos_actualizar):
         cursor = self.connection.cursor()
         cursor.execute("UPDATE `geopulso`.`proveedores` SET `nombre_empresa` = '%s', `producto_servicio`='%s', `nombre_contacto`='%s', `cargo_contacto`='%s', `telefono`='%s', `correo`='%s', `rif`='%s', `sitio_web`='%s', `comentarios`='%s'  WHERE (`id_proveedores` = '%s')" % (datos_actualizar))
         self.connection.commit()
 
-    def borrar_proveedores (self, id_c):
+    def borrar_proveedores(self, id_c):
         cursor = self.connection.cursor()
-        cursor.execute("DELETE FROM `geopulso`.`proveedores` WHERE (`id_proveedores` = '%s')" % (id_c))
+        cursor.execute("DELETE FROM geopulso.proveedores WHERE (`id_proveedores` = '%s')" % (id_c))
         self.connection.commit()
 
 
