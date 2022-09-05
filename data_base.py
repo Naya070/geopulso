@@ -1,6 +1,6 @@
 from sqlite3 import connect
 import mysql.connector
-
+from datetime import datetime
 
 
 class bd:
@@ -212,5 +212,45 @@ class bd:
 
 
 
+
+
+# FUNCIONES MATERIAL
+
+
+    #GESTION DE PRODUCTOS FUNCIONES
+
+    def mostrar_categoria_material(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.categoria_material")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+    
+    def mostrar_material(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.material")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def busqueda_material(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_proveedores FROM geopulso.proveedores WHERE nombre_empresa LIKE '%s' OR nombre_contacto LIKE '%s'" % (criterio1, criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def anadir_mat_bd(self, datos):
+        print(datos)
+        cursor = self.connection.cursor()
+        cursor.execute("""INSERT INTO geopulso.proveedores (`nombre_empresa`, `producto_servicio`, `nombre_contacto`, `cargo_contacto`, `telefono`, `correo`, `rif`, `sitio_web`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
+        self.connection.commit()
+
+    def actualizar_material(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`material` SET `id_material` = '%s', `categoria`='%s', `producto`='%s', `descripcion`='%s', `marca`='%s', `modelo`='%s', `proveedor_id`='%s', `cantidad`='%s', `precio`='%s', `ultima_entrada`='%s', `comentarios`='%s'  WHERE (`id_material` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def borrar_material(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM geopulso.proveedores WHERE (`id_proveedores` = '%s')" % (id_c))
+        self.connection.commit()
         
         

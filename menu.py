@@ -6,7 +6,7 @@ from turtle import bgcolor, heading, left, right, width
 from tkinter import ttk
 from webbrowser import get
 from PIL import ImageTk, Image
-
+from datetime import datetime
 
 import tkinter.font as font
 
@@ -306,7 +306,7 @@ class Clase_menu(tk.Frame):
         self.button_proveedores = tk.Button(self.frame_fondo, command = lambda:controller.show_frame(Clase_proveedores), text="Proveedores", width=20, height=2, bg='#303452', fg='white', font=("Cambria", 12, "bold")).pack( )
         self.label_espacio = tk.Label(self.frame_fondo, text="\n", bg='#ecf0f6').pack()
             
-        self.button_material= tk.Button(self.frame_fondo, text="Material", width=20, height=2, bg='#303452', fg='white', font=("Cambria", 12, "bold")).pack()
+        self.button_material= tk.Button(self.frame_fondo,command = lambda:controller.show_frame(Clase_material), text="Material", width=20, height=2, bg='#303452', fg='white', font=("Cambria", 12, "bold")).pack()
         self.label_espacio = tk.Label(self.frame_fondo, text="\n", bg='#ecf0f6').pack()
 
         self.button_equipo = tk.Button(self.frame_fondo, text="Equipo", width=20, height=2, bg='#303452', fg='white', font=("Cambria", 12, "bold")).pack()
@@ -367,7 +367,7 @@ class Clase_clientes(tk.Frame):
                 #Buttons
         self.button_proyectos = tk.Button(self, text="Proyectos", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20, height=1 ).place(x = 0, y = 0)      
         self.button_proveedores = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
-        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
+        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
         self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
@@ -697,9 +697,9 @@ class Clase_empleados(tk.Frame):
                 #Buttons
         self.button_proyectos = tk.Button(self, text="Proyectos", command = lambda:controller.show_frame(mientras),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20, height=1 ).place(x = 0, y = 0)      
         self.button_proveedores = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores),bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
-        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
+        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(mientras),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=510, y=0)
-        self.button_empleados = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=680, y=0)
+        self.button_clientes = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=680, y=0)
         self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=850, y=0)
 
         self.anadir = tk.Button(self, text="Añadir empleado", command = self.anadir_empleados,bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 250) 
@@ -1018,8 +1018,8 @@ class Clase_proveedores(tk.Frame):
 
                 #Buttons
         self.button_proyectos = tk.Button(self, text="Proyectos", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20, height=1 ).place(x = 0, y = 0)      
-        self.button_proveedores = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
-        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
+        self.button_clientes = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
+        self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
         self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
@@ -1319,130 +1319,151 @@ class Clase_material(tk.Frame):
         def mientras():
             pass
         
-        def salir():
-            self.master.destroy()
-            self.master.quit()
         
 
         self.config(bg="#ecf0f6", width=2440, height=300)
 
         self.frame_fondo = tk.Frame(self)
         self.frame_fondo.pack(expand=True)
-        self.frame_fondo.config(bg="blue", width=1440, height=500)
-            
+        self.frame_fondo.config(bg="#ecf0f6", width=1440, height=500)
+
+        self.label_a= tk.Label(self.frame_fondo, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_a.place(x=10, y=90, width=610, height= 225)  
 
         #self.fondo = ImageTk.PhotoImage(Image.open("img/fondo_azul.jpg"))
         
-        self.frame_0 = tk.Frame(self.frame_fondo)
-        self.frame_0.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
-        self.frame_0.config(bg="salmon", width=500, height=100)
-        
-        #self.frame_1 = tk.Frame(self.frame_fondo)
-        #self.frame_1.pack( side=tk.LEFT, expand=True)
-        #self.frame_1.config(bg="green", width=50, height=70)
+        self.frame_1 = tk.Frame(self.frame_fondo)
+        self.frame_1.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
+        self.frame_1.config(bg="#ecf0f6", width=500, height=90)
 
         self.frame_2 = tk.Frame(self.frame_fondo)
         self.frame_2.pack(fill=tk.BOTH, side=tk.RIGHT, expand=True)
-        self.frame_2.config(bg="yellow", width=400, height=700)
+        self.frame_2.config(bg="#ecf0f6", width=400, height=700)
 
-        #self.frame_3 = tk.Frame(self.frame_1)
-        #self.frame_3.pack(fill=tk.BOTH, side=tk.BOTTOM, expand=True)
-        #self.frame_3.config(bg="white", width=20, height=20)
+        self.label_b= tk.Label(self.frame_2, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_b.place(x=10, y=1, width=380, height= 610)
 
-        """self.label_a= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
-        self.label_a.place(x=10, y=90, width=350, height= 300)
-
-        self.label_b= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
-        self.label_b.place(x=365,y=90, width=290, height= 300)
-
-        self.label_c= tk.Label(self.frame_1, bg="#ecf0f6", relief=tk.SUNKEN)
-        self.label_c.place(x=660,y=90, width=355, height= 300)"""
 
                 #Buttons
         self.button_proyectos = tk.Button(self, text="Proyectos", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20, height=1 ).place(x = 0, y = 0)      
-        self.button_proveedores = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
-        self.button_material = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
+        self.button_clientes = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 170, y = 0)     
+        self.button_proveedores = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(mientras), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
         self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
-        self.anadir = tk.Button(self, text="Añadir proveedor",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 590) 
-        self.actualizar_b = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 590)
-        self.eliminar = tk.Button(self, text="Eliminar proveedor", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=2).place(x = 680, y = 650) 
-        self.limpiar = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 650)  
         
-        self.anadir_ca= tk.Button(self, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 15, y = 250) 
-        self.actualizar_ca = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 170, y = 250)
-        self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=2).place(x = 325, y = 250) 
-        self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 480, y = 250)  
+        self.anadir_ca= tk.Button(self, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 220) 
+        self.actualizar_ca = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 220)
+        self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 220) 
+        self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 220) 
 
-        self.buscar = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=920, y=140) 
+        self.eliminar_ca = tk.Button(self, text="Mostrar tabla categorias", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 50, y = 270) 
+        self.limpiar_ca = tk.Button(self, text="Mostrar tabla productos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=25, height=1).place(x = 350, y = 270)  
+        
+        self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=520, y=115) 
 
-        self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=530, y=140) 
 
+
+
+        self.anadir_pro = tk.Button(self, text="Añadir material",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 680, y = 610) 
+        self.actualizar_pro = tk.Button(self, text="Actualizar", command = self.actualizar, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 610)
+        self.eliminar_pro = tk.Button(self, text="Eliminar material", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 680, y = 650) 
+        self.limpiar_pro = tk.Button(self, text="Limpiar campos", command = self.limpiarCampos, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 650)  
+        
+
+        self.buscar_pro = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=910, y=115) 
+
+        
 
                 #Labels
         self.agregar_categoria= tk.Label(self, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
         self.gestion_producto= tk.Label(self, text="Gestion de producto", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
             
-        self.categoria_id = tk.Label(self, text="ID de la Categoria:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=145)  
-        self.categoria_nombre = tk.Label(self, text="Nombre de la categoria:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=195)
+        self.categoria_id = tk.Label(self, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=120)  
+        self.categoria_nombre = tk.Label(self, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=170)
         
         
         
-        self.id_producto = tk.Label(self, text="ID producto:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=640, y=190)
-        self.telefono = tk.Label(self, text="Categoria:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=640, y=230)
-        self.telefono = tk.Label(self, text="Producto:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=640, y=270)
-        #self.correo= tk.Label(self, text="Telefono:", font=("Arial"), bg="#f3fbfe", fg="#303452" ).place(x=13, y=320) 
-
-        #self.direccion_vivienda = tk.Label(self, text="Correo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=120)
-        #self.empresa = tk.Label(self, text="RIF:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=170)
-        #self.direccion_empresa = tk.Label(self, text="Sitio web:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=220)
-            
-        #self.comentarios= tk.Label(self, text="Comentarios:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=270)
+        self.id_producto_label = tk.Label(self, text="ID producto:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=150)
+        self.categoria_label = tk.Label(self, text="Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=190)
+        self.producto_label = tk.Label(self, text="Producto:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=230)
+        self.descripcion_label = tk.Label(self, text="Descripcion:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=270)
+        self.marca_label = tk.Label(self, text="Marca:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=310)
+        self.modelo_label = tk.Label(self, text="Modelo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=350)
+        self.id_proveedor_label = tk.Label(self, text="ID proveedor:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=390)
+        self.cantidad_label = tk.Label(self, text="Cantidad:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=430)
+        self.precio_label = tk.Label(self, text="Precio:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=470)
+        self.ultima_entrada_label = tk.Label(self, text="Ultima entrada:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=510)
+        self.comentarios_label = tk.Label(self, text="Comentarios:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=550)
+        
             
                 #Entry
             
             
+        self.categoria_id_var = StringVar()   
+        self.categoria_nombre_var = StringVar() 
+        
+        self.id_producto_var = StringVar()
+        self.categoria_var = StringVar()
+        self.producto_var = StringVar()
+        self.descripcion_var = StringVar()
+        self.marca_var = StringVar()
+        self.modelo_var = StringVar()
+        
+        self.id_proveedor_var = StringVar()
+
+        self.cantidad_var = StringVar()
+        self.precio_var = StringVar()
+        self.ultima_entrada_var = StringVar()
             
-        self.nombre_empresa_var = StringVar()
-        self.producto_servicio_var = StringVar()
-        self.nombre_contacto_var = StringVar()
-        self.cargo_contacto_var = StringVar()
-        self.telefono_var = StringVar()
-        self.correo_var = StringVar()
-        self.rif_var = StringVar()
-        self.sitio_web_var = StringVar()
-        #self.comentarios_var = StringVar()
-            
 
-        self.buscar_entry_var = StringVar()
+        self.buscar_entry_pro_var = StringVar()
+        
             
 
 
 
             
-        self.categoria_id_entry = tk.Entry(self, textvariable= self.nombre_empresa_var).place(x=270, y=145, width=250)
-        self.categoria_nombre_entry= tk.Entry(self, textvariable= self.producto_servicio_var).place(x=270, y=195, width=250)
-        #self.nombre_contacto_entry = tk.Entry(self, textvariable= self.cargo_contacto_var).place(x=15, y=245, width=250)
-        #self.cargo_contacto_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=295, width=250)
-        #self.telefono_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=345, width=250)
-
-        #self.correo_entry= tk.Entry(self, textvariable= self.correo_var).place(x=370, y=145, width=250)
-        #self.rif_entry = tk.Entry(self, textvariable= self.rif_var).place(x=370, y=195, width=250)
-        #self.sitio_web_entry = tk.Entry(self, textvariable= self.sitio_web_var).place(x=370, y=245, width=250)
+        self.categoria_id_entry = tk.Entry(self, textvariable= self.categoria_id_var).place(x=260, y=120, width=250)
+        self.categoria_nombre_entry= tk.Entry(self, textvariable= self.categoria_nombre_var).place(x=260, y=170, width=250)
+        
+        
+        self.id_producto_entry = tk.Entry(self, textvariable= self.id_producto_var).place(x=780, y=150, width=200)
+        
+        self.categoria_en_material = control_bd.mostrar_categoria_material()
+        self.lista_cat= []
+        for self.cat in self.categoria_en_material:
+            self.lista_cat.append("%s-%s" % (self.pro[0], self.pro[1]) )
+            
+        self.combo_categoria = ttk.Combobox(
+        values=self.lista_cat)
+        self.combo_categoria.place(x=780, y=190, width=200)
+        #self.categoria_entry = tk.Entry(self, textvariable= self.categoria_var).place(x=780, y=190, width=200)
+        self.producto_entry = tk.Entry(self, textvariable= self.producto_var).place(x=780, y=230, width=200)
+        self.descripcion_entry= tk.Entry(self, textvariable= self.descripcion_var).place(x=780, y=270, width=200)
+        self.marca_entry = tk.Entry(self, textvariable= self.marca_var).place(x=780, y=310, width=200)
+        self.modelo_entry = tk.Entry(self, textvariable= self.modelo_var).place(x=780, y=350, width=200)
+        self.proveedores_en_material = control_bd.mostrar_proveedores()
+        self.lista_pro= []
+        for self.pro in self.proveedores_en_material:
+            self.lista_pro.append("%s-%s" % (self.pro[0], self.pro[1]) )
+            
+        self.combo_proveedor = ttk.Combobox(
+        values=self.lista_pro)
+        self.combo_proveedor.place(x=780, y=390, width=200)
+        #self.id_proveedor_entry = tk.Entry(self, textvariable= self.id_proveedor_var).place(x=780, y=390, width=200)
+        self.cantidad_entry = tk.Entry(self, textvariable= self.cantidad_var).place(x=780, y=430, width=200)
+        self.precio_entry = tk.Entry(self, textvariable= self.precio_var).place(x=780, y=470, width=200)
+        self.ultima_entrada_entry = tk.Entry(self, textvariable= self.ultima_entrada_var).place(x=800, y=510, width=200)
 
         #Comentarios
-        #self.textBox=tk.Text(self, height=6, width=35) 
-        #self.textBox.place(x=370, y=295)
-        #self.textBox.get('1.0','end')
+        self.textBox=tk.Text(self, height=4, width=28) 
+        self.textBox.place(x=800, y=540)
+        self.textBox.get('1.0','end')
             
             
-            
-        self.buscar = tk.Label(self, text="Buscar", font=("Arial"),
-                                bg="#f9fdff", fg="#303452", width=6, height=1).place(x=640, y=120)
-
-        self.buscar_entry = tk.Entry(self, textvariable= self.buscar_entry_var).place(x=640, y=145, width=250)
+        self.buscar_entry_pro = tk.Entry(self, textvariable= self.buscar_entry_pro_var).place(x=640, y=120, width=250)
 
             # Frame del treeview
         self.frame_treeview = tk.Frame(self.frame_fondo)
@@ -1473,7 +1494,7 @@ class Clase_material(tk.Frame):
             # TREEVIEW
         self.tree.config(xscrollcommand=self.treexscroll.set, yscrollcommand=self.treeyscroll.set, 
         columns=(
-                    "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9"))
+                    "col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8", "col9", "col10"))
 
         
         self.tree.column("#0", width=150, stretch= False)
@@ -1486,20 +1507,22 @@ class Clase_material(tk.Frame):
         self.tree.column("col7", width=150, stretch= False)
         self.tree.column("col8", width=150, stretch= False)
         self.tree.column("col9", width=150, stretch= False)
+        self.tree.column("col10", width=150, stretch= False)
             
         
 
             
-        self.tree.heading("#0", text="Id", anchor=tk.CENTER)
-        self.tree.heading("col1", text="Nombre de la empresa", anchor=tk.CENTER)
-        self.tree.heading("col2", text="Producto o servicio", anchor=tk.CENTER)
-        self.tree.heading("col3", text="Nombre del contacto de la empresa", anchor=tk.CENTER)
-        self.tree.heading("col4", text="Cargo del contacto de la empresa", anchor=tk.CENTER)
-        self.tree.heading("col5", text="Telefono", anchor=tk.CENTER)
-        self.tree.heading("col6", text="Correo", anchor=tk.CENTER)
-        self.tree.heading("col7", text= "RIF", anchor=tk.CENTER)
-        self.tree.heading("col8", text="Sitio web", anchor=tk.CENTER)
-        self.tree.heading("col9", text="Comentarios", anchor=tk.CENTER)
+        self.tree.heading("#0", text="Id producto", anchor=tk.CENTER)
+        self.tree.heading("col1", text="Categoria", anchor=tk.CENTER)
+        self.tree.heading("col2", text="Producto", anchor=tk.CENTER)
+        self.tree.heading("col3", text="Descripcion", anchor=tk.CENTER)
+        self.tree.heading("col4", text="Marca", anchor=tk.CENTER)
+        self.tree.heading("col5", text="Modelo", anchor=tk.CENTER)
+        self.tree.heading("col6", text="Id proveedor", anchor=tk.CENTER)
+        self.tree.heading("col7", text= "cantidad", anchor=tk.CENTER)
+        self.tree.heading("col8", text="precio", anchor=tk.CENTER)
+        self.tree.heading("col9", text="Ultima entrada", anchor=tk.CENTER)
+        self.tree.heading("col10", text="Comentarios", anchor=tk.CENTER)
             
             
 
@@ -1509,13 +1532,157 @@ class Clase_material(tk.Frame):
         self.id = 0
         self.iid = 0
 
-        #self.mostrar()
+        self.mostrar()
             
             
-        #self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick)
-        #self.tree.bind('<<TreeviewSelect>>', self.bindings)
+        self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick)
+        self.tree.bind('<<TreeviewSelect>>', self.bindings)
+
+        #GESTION DE PRODUCTOS FUNCIONES
+
+    def mostrar(self): #Actualizar treeview luego de modificar
+            
+            control_bd = bd()
+            datos_apt = control_bd.mostrar_material()
+            
+            registros = self.tree.get_children()
+            for elemento in registros:
+                self.tree.delete(elemento)
+            try:
+                self.indice= 1
+                for row in datos_apt:			
+                    self.tree.tag_configure("#ecf0f6", background="#ecf0f6")
+                    self.tree.tag_configure("white", background="white")
+                    color = "white" if self.indice % 2 else "#ecf0f6"
+                    id_cliente = row[0]
+                    
+                    self.tree.insert("",END, tag=('fuente', color), iid=id_cliente, text = row[0], values =(row[1], 
+                    row[2],row[3], row[4], row[5],row[6], row[7],row[8], row[9], row[10]))
+                    self.indice= self.indice+1
+                            
+            except:
+                pass
 
 
+    def limpiarCampos(self):
+        
+            self.id_producto_var.set("")
+            self.combo_categoria.set("")
+            self.producto_var.set("")
+            self.descripcion_var.set("")
+            self.marca_var.set("")
+            self.modelo_var.set("")
+            self.combo_proveedor.set("")
+            self.cantidad_var.set("")
+            self.precio_var.set("")
+            self.ultima_entrada_var.set("")
+            self.textBox.delete('1.0','end')
+            
+    
+    
+    def seleccionarUsandoClick(self, event):
+            item = self.tree.identify('item', event.x, event.y)
+
+            self.id_producto_var.set(self.tree.item(item, "text"))
+            self.categoria_var.set(self.tree.item(item, "values")[0])
+            self.producto_var.set(self.tree.item(item, "values")[1])
+            self.descripcion_var.set(self.tree.item(item, "values")[2])
+            self.marca_var.set(self.tree.item(item, "values")[3])
+            self.modelo_var.set(self.tree.item(item, "values")[4])
+            
+            self.id_proveedor_var.set(self.tree.item(item, "values")[5])
+            self.cantidad_var.set(self.tree.item(item, "values")[6])
+            self.precio_var.set(self.tree.item(item, "values")[7])
+            self.ultima_entrada_var.set(self.tree.item(item, "values")[8])
+            self.textBox.delete('1.0','end')
+            self.textBox.insert('end', self.tree.item(item, "values")[9])
+
+            print("you clicked on", self.tree.item(item,"text"))
+            self.id_c = self.tree.item(item,"text")
+            print(self.id_c)
+            #self.tree.selection_set('0')
+			
+    
+    
+    def busqueda(self):
+            control_bd = bd()
+            
+
+            try:
+                self.criterio1 = ''
+                self.criterio = self.buscar_entry_var.get()
+                print(self.criterio)
+                self.criterio1 = "%s" % self.criterio +"%"
+                self.datos = control_bd.busqueda_proveedores(self.criterio1)
+                print("Criterio1: ", self.criterio1)
+
+                if self.criterio1 == '%':
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    
+                elif self.criterio1 != '':
+                    numeros = []
+                    for row in self.datos:
+                        numeros.append(row[0])
+                        self.row_id = row[0]
+                    self.tree.selection
+                    self.tree.selection_set(self.tree.tag_has(self.row_id))
+                    self.tree.selection_set(numeros) # move selection
+                    self.tree.focus(self.row_id) # move focus
+                    self.tree.see(self.row_id)
+            except:
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
+                pass
+
+
+    def bindings(self, event):
+            self.tree.bind("<Button-1>", self.seleccionarUsandoClick)
+            
+
+
+    def anadir_proveedor(self):
+        control_bd = bd()
+
+        try:
+            if self.nombre_empresa_var.get() == '' or self.producto_servicio_var.get()=='':
+                messagebox.showwarning("ADVERTENCIA","Debe introducir nombre de la empresa y producto o servicio que ofrece")
+            else:
+                datos = self.nombre_empresa_var.get(), self.producto_servicio_var.get(), self.nombre_contacto_var.get(), self.cargo_contacto_var.get(), self.telefono_var.get(), self.correo_var.get(), self.rif_var.get(), self.sitio_web_var.get(), self.textBox.get(1.0, tk.END+"-1c")
+                control_bd.anadir_pro_bd(datos)
+                messagebox.showinfo("REALIZADO","Proveedor anadido")
+        
+        except:
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir proveedor")
+                pass
+
+        self.limpiarCampos()
+        self.mostrar()
+
+
+
+    def actualizar(self):
+            control_bd = bd()
+
+            try:
+                datos_actualizar = self.id_producto_var.get(), self.categoria_var.get(), self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.id_proveedor_var.get(), self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c"), self.id_c 
+                control_bd.actualizar_material(datos_actualizar)
+            except:
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al actualizar el registro")
+                pass
+            self.limpiarCampos()
+            self.mostrar()
+
+        
+    def borrar(self):
+        control_bd = bd()
+        try:
+            if messagebox.askyesno(message="¿Realmente desea eliminar el registro?", title="ADVERTENCIA"):
+                control_bd.borrar_proveedores(self.id_c)
+        except:
+            messagebox.showwarning("ADVERTENCIA","Ocurrió un error al tratar de eliminar el registro")
+            pass
+
+        self.limpiarCampos()
+        self.mostrar()
 
 
     
