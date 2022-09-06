@@ -1353,26 +1353,28 @@ class Clase_material(tk.Frame):
         self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
         
-        self.anadir_ca= tk.Button(self, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 220) 
-        self.actualizar_ca = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 220)
-        self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 220) 
-        self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 220) 
+        #self.anadir_ca= tk.Button(self, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 240) 
+        #self.actualizar_ca = tk.Button(self, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 240)
+        #self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 240) 
+        #self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 240) 
 
-        self.eliminar_ca = tk.Button(self, text="Mostrar tabla categorias", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 50, y = 270) 
-        self.limpiar_ca = tk.Button(self, text="Mostrar tabla productos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=25, height=1).place(x = 350, y = 270)  
+        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorias", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 280) 
         
-        self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=520, y=115) 
+        #self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=115) 
 
 
 
 
-        self.anadir_pro = tk.Button(self, text="Añadir material",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 680, y = 610) 
+        self.anadir_pro = tk.Button(self, text="Añadir material",command = self.anadir_material, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 680, y = 610) 
         self.actualizar_pro = tk.Button(self, text="Actualizar", command = self.actualizar, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 610)
-        self.eliminar_pro = tk.Button(self, text="Eliminar material", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 680, y = 650) 
+        self.eliminar_pro = tk.Button(self, text="Eliminar material", command = self.borrar, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 680, y = 650) 
         self.limpiar_pro = tk.Button(self, text="Limpiar campos", command = self.limpiarCampos, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 650)  
         
 
-        self.buscar_pro = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=910, y=115) 
+        self.buscar_pro = tk.Button(self, text="Buscar", command = self.busqueda, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=910, y=115) 
+
+        
+        self.poner_fecha = tk.Button(self, text="Fecha", command = self.fecha_poner, bg='#72729a', fg='white', font=("Arial",8,"bold"), width=5).place(x=945, y=508) 
 
         
 
@@ -1380,8 +1382,8 @@ class Clase_material(tk.Frame):
         self.agregar_categoria= tk.Label(self, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
         self.gestion_producto= tk.Label(self, text="Gestion de producto", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
             
-        self.categoria_id = tk.Label(self, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=120)  
-        self.categoria_nombre = tk.Label(self, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=170)
+        #self.categoria_id = tk.Label(self, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=150)  
+        #self.categoria_nombre = tk.Label(self, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=190)
         
         
         
@@ -1425,8 +1427,8 @@ class Clase_material(tk.Frame):
 
 
             
-        self.categoria_id_entry = tk.Entry(self, textvariable= self.categoria_id_var).place(x=260, y=120, width=250)
-        self.categoria_nombre_entry= tk.Entry(self, textvariable= self.categoria_nombre_var).place(x=260, y=170, width=250)
+        #self.categoria_id_entry = tk.Entry(self, textvariable= self.categoria_id_var).place(x=260, y=150, width=250)
+        #self.categoria_nombre_entry= tk.Entry(self, textvariable= self.categoria_nombre_var).place(x=260, y=190, width=250)
         
         
         self.id_producto_entry = tk.Entry(self, textvariable= self.id_producto_var).place(x=780, y=150, width=200)
@@ -1434,12 +1436,12 @@ class Clase_material(tk.Frame):
         self.categoria_en_material = control_bd.mostrar_categoria_material()
         self.lista_cat= []
         for self.cat in self.categoria_en_material:
-            self.lista_cat.append("%s-%s" % (self.pro[0], self.pro[1]) )
+            self.lista_cat.append("%s-%s" % (self.cat[0], self.cat[1]) )
             
         self.combo_categoria = ttk.Combobox(
         values=self.lista_cat)
         self.combo_categoria.place(x=780, y=190, width=200)
-        #self.categoria_entry = tk.Entry(self, textvariable= self.categoria_var).place(x=780, y=190, width=200)
+        
         self.producto_entry = tk.Entry(self, textvariable= self.producto_var).place(x=780, y=230, width=200)
         self.descripcion_entry= tk.Entry(self, textvariable= self.descripcion_var).place(x=780, y=270, width=200)
         self.marca_entry = tk.Entry(self, textvariable= self.marca_var).place(x=780, y=310, width=200)
@@ -1452,10 +1454,10 @@ class Clase_material(tk.Frame):
         self.combo_proveedor = ttk.Combobox(
         values=self.lista_pro)
         self.combo_proveedor.place(x=780, y=390, width=200)
-        #self.id_proveedor_entry = tk.Entry(self, textvariable= self.id_proveedor_var).place(x=780, y=390, width=200)
+        
         self.cantidad_entry = tk.Entry(self, textvariable= self.cantidad_var).place(x=780, y=430, width=200)
         self.precio_entry = tk.Entry(self, textvariable= self.precio_var).place(x=780, y=470, width=200)
-        self.ultima_entrada_entry = tk.Entry(self, textvariable= self.ultima_entrada_var).place(x=800, y=510, width=200)
+        self.ultima_entrada_entry = tk.Entry(self, textvariable= self.ultima_entrada_var).place(x=794, y=510, width=150)
 
         #Comentarios
         self.textBox=tk.Text(self, height=4, width=28) 
@@ -1464,6 +1466,9 @@ class Clase_material(tk.Frame):
             
             
         self.buscar_entry_pro = tk.Entry(self, textvariable= self.buscar_entry_pro_var).place(x=640, y=120, width=250)
+
+        #self.buscar_entry_ca = tk.Entry(self, textvariable= self.buscar_entry_pro_var).place(x=15, y=120, width=250)
+
 
             # Frame del treeview
         self.frame_treeview = tk.Frame(self.frame_fondo)
@@ -1564,6 +1569,128 @@ class Clase_material(tk.Frame):
                 pass
 
 
+
+    def mostrar_tabla_categoria(self):
+        self.ventana_nueva1 = tk.Toplevel()
+        self.ventana_nueva1.geometry("700x700")
+        self.ventana_nueva1.title("Tabla categorias")
+        self.ventana_nueva1.configure(background="#ecf0f6")
+
+        self.frame_fondo_toplevel = tk.Frame(self.ventana_nueva1)
+        self.frame_fondo_toplevel.pack(expand=True)
+        self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=300)
+        
+        #Label fondo
+        self.label_a= tk.Label(self.frame_fondo_toplevel, bg="#ecf0f6", relief=tk.SUNKEN)
+        self.label_a.place(x=10, y=90, width=610, height= 225)
+        
+        #Stringvar
+        self.categoria_id_var = StringVar()   
+        self.categoria_nombre_var = StringVar() 
+
+        #Labels
+        self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)
+
+        self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=150)  
+        self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=190)
+        
+        #Entry
+        self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_pro_var).place(x=15, y=120, width=250)
+        self.categoria_id_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_id_var).place(x=260, y=150, width=250)
+        self.categoria_nombre_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_nombre_var).place(x=260, y=190, width=250)
+
+        #Buttom
+        self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=115) 
+
+        self.anadir_ca= tk.Button(self.frame_fondo_toplevel, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 240) 
+        self.actualizar_ca = tk.Button(self.frame_fondo_toplevel, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 240)
+        self.eliminar_ca = tk.Button(self.frame_fondo_toplevel, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 240) 
+        self.limpiar_ca = tk.Button(self.frame_fondo_toplevel, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 240) 
+
+        # Frame del treeview
+        self.frame_treeview2 = tk.Frame(self.ventana_nueva1)
+        self.frame_treeview2.pack(fill=tk.Y, side=tk.BOTTOM)
+        self.frame_treeview2.config(bg="white", width=20, height=30)
+
+        style2 = ttk.Style()
+        style2.configure("mystyle.Treeview",
+            background = "red",
+            foreground = "#303452",
+            rowheight = 30,
+            fieldbackground = "white"
+        )
+
+                    # Set the treeview
+        self.tree2 = ttk.Treeview(self.frame_treeview2, style="mystyle.Treeview", height=12)
+
+        self.treexscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.HORIZONTAL)
+        self.treexscroll2.pack(fill=tk.X, side=tk.BOTTOM)
+            # configurar scrollbar
+        self.treexscroll2.config(command=self.tree2.xview)
+
+        self.treeyscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.VERTICAL)
+        self.treeyscroll2.pack(fill=tk.Y, side=tk.RIGHT)
+            # configurar scrollbar
+        self.treeyscroll2.config(command=self.tree2.yview)
+
+            # TREEVIEW
+        self.tree2.config(xscrollcommand=self.treexscroll2.set, yscrollcommand=self.treeyscroll2.set, 
+        columns=(
+                    "col1"))
+
+        
+        self.tree2.column("#0", width=150, stretch= False)
+        self.tree2.column("col1", width=150, stretch= False)
+            
+        self.tree2.heading("#0", text="Id categoria", anchor=tk.CENTER)
+        self.tree2.heading("col1", text="Categoria", anchor=tk.CENTER)
+            
+            
+        self.tree2.pack()
+        self.treeview2 = self.tree2
+            
+        self.id = 0
+        self.iid = 0
+
+        self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick_ca)
+        self.tree.bind('<<TreeviewSelect>>', self.bindings_ca)
+
+        control_bd = bd()
+        datos_apt2 = control_bd.mostrar_categoria_material()
+            
+        registros2 = self.tree2.get_children()
+        for elemento2 in registros2:
+            self.tree2.delete(elemento2)
+        try:
+            self.indice= 1
+            for row2 in datos_apt2:			
+                self.tree2.tag_configure("#ecf0f6", background="#ecf0f6")
+                self.tree2.tag_configure("white", background="white")
+                color = "white" if self.indice % 2 else "#ecf0f6"
+                id_cliente2 = row2[0]
+                    
+                self.tree2.insert("",END, tag=('fuente', color), iid=id_cliente2, text = row2[0], values =(row2[1]))
+                self.indice= self.indice+1
+                            
+        except:
+            print("ocurrio un error en mostrar_tabla_categoria")
+
+        def seleccionarUsandoClick_ca(self, event):
+            self.mostrar_tabla_categoria()
+        
+            item = self.tree2.identify('item', event.x, event.y)
+            self.categoria_id_var.set(self.tree2.item(item, "text"))
+            self.categoria_nombre_var.set(self.tree2.item(item, "values")[0])
+
+            print("you clicked on", self.tree2.item(item,"text"))
+            self.id_c = self.tree2.item(item,"text")
+            print(self.id_c)
+
+
+        def bindings_ca(self, event):
+            self.tree.bind("<Button-1>", self.seleccionarUsandoClick)
+
+
     def limpiarCampos(self):
         
             self.id_producto_var.set("")
@@ -1577,20 +1704,52 @@ class Clase_material(tk.Frame):
             self.precio_var.set("")
             self.ultima_entrada_var.set("")
             self.textBox.delete('1.0','end')
+
+    def limpiarCampo_ca(self):
+        
+            self.categoria_id_var.set("") 
+            self.categoria_nombre_var.set("") 
             
     
-    
-    def seleccionarUsandoClick(self, event):
-            item = self.tree.identify('item', event.x, event.y)
+    def seleccionarUsandoClick_ca(self, event):
+        self.mostrar_tabla_categoria()
+        
+        item = self.tree2.identify('item', event.x, event.y)
+        self.categoria_id_var.set(self.tree2.item(item, "text"))
+        self.categoria_nombre_var.set(self.tree2.item(item, "values")[0])
 
+        print("you clicked on", self.tree2.item(item,"text"))
+        self.id_c = self.tree2.item(item,"text")
+        print(self.id_c)
+    
+
+    def seleccionarUsandoClick(self, event):
+            control_bd = bd()
+
+            item = self.tree.identify('item', event.x, event.y)
+            
+            self.categoria_en_material = control_bd.mostrar_categoria_material()
+            self.lista= list(enumerate(self.categoria_en_material))
+            for segmento in self.lista:
+                if int(self.tree.item(item, "values")[0]) == int(segmento[1][0]):
+                    self.combo_categoria.current(int(segmento[0]))
+
+            
             self.id_producto_var.set(self.tree.item(item, "text"))
-            self.categoria_var.set(self.tree.item(item, "values")[0])
+
             self.producto_var.set(self.tree.item(item, "values")[1])
             self.descripcion_var.set(self.tree.item(item, "values")[2])
             self.marca_var.set(self.tree.item(item, "values")[3])
             self.modelo_var.set(self.tree.item(item, "values")[4])
             
+            self.proveedores_en_material = control_bd.mostrar_proveedores_para_material()
+            self.lista2= list(enumerate(self.proveedores_en_material))
+            for segmento2 in self.lista2:
+                if int(self.tree.item(item, "values")[5]) == int(segmento2[1][0]):
+                    self.combo_proveedor.current(int(segmento2[0]))
+            
             self.id_proveedor_var.set(self.tree.item(item, "values")[5])
+            
             self.cantidad_var.set(self.tree.item(item, "values")[6])
             self.precio_var.set(self.tree.item(item, "values")[7])
             self.ultima_entrada_var.set(self.tree.item(item, "values")[8])
@@ -1610,10 +1769,10 @@ class Clase_material(tk.Frame):
 
             try:
                 self.criterio1 = ''
-                self.criterio = self.buscar_entry_var.get()
+                self.criterio = self.buscar_entry_pro_var.get()
                 print(self.criterio)
                 self.criterio1 = "%s" % self.criterio +"%"
-                self.datos = control_bd.busqueda_proveedores(self.criterio1)
+                self.datos = control_bd.busqueda_material(self.criterio1)
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
@@ -1636,22 +1795,25 @@ class Clase_material(tk.Frame):
 
     def bindings(self, event):
             self.tree.bind("<Button-1>", self.seleccionarUsandoClick)
+
+    def bindings_ca(self, event):
+            self.tree.bind("<Button-1>", self.seleccionarUsandoClick)
             
 
 
-    def anadir_proveedor(self):
+    def anadir_material(self):
         control_bd = bd()
 
         try:
-            if self.nombre_empresa_var.get() == '' or self.producto_servicio_var.get()=='':
-                messagebox.showwarning("ADVERTENCIA","Debe introducir nombre de la empresa y producto o servicio que ofrece")
+            if self.id_producto_var.get() == '' or self.combo_categoria.get()=='' or self.producto_var.get()=='' or self.combo_proveedor.get()=='':
+                messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
             else:
-                datos = self.nombre_empresa_var.get(), self.producto_servicio_var.get(), self.nombre_contacto_var.get(), self.cargo_contacto_var.get(), self.telefono_var.get(), self.correo_var.get(), self.rif_var.get(), self.sitio_web_var.get(), self.textBox.get(1.0, tk.END+"-1c")
-                control_bd.anadir_pro_bd(datos)
-                messagebox.showinfo("REALIZADO","Proveedor anadido")
+                datos = self.id_producto_var.get(), self.combo_categoria_var, self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c")
+                control_bd.anadir_mat_bd(datos)
+                messagebox.showinfo("REALIZADO","Material anadido")
         
         except:
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir proveedor")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir material")
                 pass
 
         self.limpiarCampos()
@@ -1663,7 +1825,20 @@ class Clase_material(tk.Frame):
             control_bd = bd()
 
             try:
-                datos_actualizar = self.id_producto_var.get(), self.categoria_var.get(), self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.id_proveedor_var.get(), self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c"), self.id_c 
+                self.combo_categoria_var = self.combo_categoria.get().split('-')
+                self.combo_categoria_var = int(self.combo_categoria_var[0])
+                print(self.combo_categoria_var)
+                print(type(self.combo_categoria_var))
+                
+
+                self.combo_proveedor_var = self.combo_proveedor.get().split('-')
+                self.combo_proveedor_var = int(self.combo_proveedor_var[0])
+                print(self.combo_proveedor_var)
+                print(type(self.combo_proveedor_var))
+
+
+                datos_actualizar = self.id_producto_var.get(), self.combo_categoria_var, self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c"), self.id_c
+                print("datos_actualizar:", datos_actualizar)
                 control_bd.actualizar_material(datos_actualizar)
             except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error al actualizar el registro")
@@ -1676,13 +1851,17 @@ class Clase_material(tk.Frame):
         control_bd = bd()
         try:
             if messagebox.askyesno(message="¿Realmente desea eliminar el registro?", title="ADVERTENCIA"):
-                control_bd.borrar_proveedores(self.id_c)
+                control_bd.borrar_material(self.id_c)
         except:
             messagebox.showwarning("ADVERTENCIA","Ocurrió un error al tratar de eliminar el registro")
             pass
 
         self.limpiarCampos()
         self.mostrar()
+
+    def fecha_poner(self):
+        self.fecha = datetime.today().strftime('%d-%m-%Y')
+        self.ultima_entrada_var.set(self.fecha)
 
 
     

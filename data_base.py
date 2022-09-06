@@ -218,10 +218,21 @@ class bd:
 
 
     #GESTION DE PRODUCTOS FUNCIONES
+    def mostrar_proveedores_para_material(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT `id_proveedores`, `nombre_empresa` FROM proveedores")
+        datos_apt = cursor.fetchall()
+        return datos_apt
 
     def mostrar_categoria_material(self):
         cursor= self.connection.cursor()
         cursor.execute("SELECT * FROM geopulso.categoria_material")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def mostrar_categoria_material_segun_Id(self, id_c):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.categoria_material WHERE (`id_categoria_material` = '%s')" % (id_c))
         datos_apt = cursor.fetchall()
         return datos_apt
     
@@ -233,14 +244,14 @@ class bd:
 
     def busqueda_material(self, criterio1):
         cursor= self.connection.cursor()
-        cursor.execute("SELECT id_proveedores FROM geopulso.proveedores WHERE nombre_empresa LIKE '%s' OR nombre_contacto LIKE '%s'" % (criterio1, criterio1))
+        cursor.execute("SELECT id_material FROM geopulso.material WHERE producto LIKE '%s' OR descripcion LIKE '%s'" % (criterio1, criterio1))
         self.datos = cursor.fetchall()
         return self.datos
 
     def anadir_mat_bd(self, datos):
         print(datos)
         cursor = self.connection.cursor()
-        cursor.execute("""INSERT INTO geopulso.proveedores (`nombre_empresa`, `producto_servicio`, `nombre_contacto`, `cargo_contacto`, `telefono`, `correo`, `rif`, `sitio_web`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
+        cursor.execute("""INSERT INTO `geopulso`.`material` (`id_material`, `categoria`, `producto`, `descripcion`, `marca`, `modelo`, `proveedor_id`, `cantidad`, `precio`, `ultima_entrada`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
         self.connection.commit()
 
     def actualizar_material(self, datos_actualizar):
@@ -250,7 +261,7 @@ class bd:
 
     def borrar_material(self, id_c):
         cursor = self.connection.cursor()
-        cursor.execute("DELETE FROM geopulso.proveedores WHERE (`id_proveedores` = '%s')" % (id_c))
+        cursor.execute("DELETE FROM geopulso.material WHERE (`id_material` = '%s')" % (id_c))
         self.connection.commit()
         
         
