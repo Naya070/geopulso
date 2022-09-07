@@ -1304,6 +1304,241 @@ class Clase_proveedores(tk.Frame):
 
 
 
+class VentanaCategoriaEnMateriales(tk.Toplevel):
+        def __init__(self, *args, callback=None, **kwargs):
+            super().__init__(*args, **kwargs)
+            
+            self.wm_attributes("-topmost", True)
+            self.geometry("640x600")
+            self.title("Tabla categorias")
+            self.configure(background="#ecf0f6")
+
+            self.frame_fondo_toplevel = tk.Frame(self)
+            self.frame_fondo_toplevel.pack(expand=True)
+            self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=200)
+
+            #Label fondo
+            self.label_a= tk.Label(self.frame_fondo_toplevel, bg="#ecf0f6", relief=tk.SUNKEN)
+            self.label_a.place(x=10, y=10, width=610, height= 225)
+        
+            #Stringvar
+            self.categoria_id_var = StringVar()   
+            self.categoria_nombre_var = StringVar()
+
+            self.buscar_entry_cat_var = StringVar()
+
+            #Labels
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=1)
+
+            self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=60)  
+            self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=100)
+
+            #Entry
+            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_cat_var).place(x=15, y=30, width=250)
+            self.categoria_id_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_id_var).place(x=260, y=60, width=250)
+            self.categoria_nombre_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_nombre_var).place(x=260, y=100, width=250)
+
+            #Buttom
+            self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", command= self.busqueda_categ, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
+
+            self.anadir_ca= tk.Button(self.frame_fondo_toplevel, text="Agregar", command= self.anadir_material_ca, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 150) 
+            self.actualizar_ca = tk.Button(self.frame_fondo_toplevel, text="Actualizar", command= self.actualizar_categ, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 150)
+            self.eliminar_ca = tk.Button(self.frame_fondo_toplevel, text="Borrar", command= self.borrar_categ, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 150) 
+            self.limpiar_ca = tk.Button(self.frame_fondo_toplevel, text="Limpiar campos", command= self.limpiarCampos_ca, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 150) 
+
+            # Frame del treeview
+            self.frame_treeview2 = tk.Frame(self)
+            self.frame_treeview2.pack(fill=tk.Y, side=tk.BOTTOM)
+            self.frame_treeview2.config(bg="white", width=20, height=30)
+
+            style2 = ttk.Style()
+            style2.configure("mystyle.Treeview",
+                background = "red",
+                foreground = "#303452",
+                rowheight = 30,
+                fieldbackground = "white"
+                )
+
+                    # Set the treeview
+            self.tree2 = ttk.Treeview(self.frame_treeview2, style="mystyle.Treeview", height=12)
+
+            self.treexscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.HORIZONTAL)
+            self.treexscroll2.pack(fill=tk.X, side=tk.BOTTOM)
+            # configurar scrollbar
+            self.treexscroll2.config(command=self.tree2.xview)
+
+            self.treeyscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.VERTICAL)
+            self.treeyscroll2.pack(fill=tk.Y, side=tk.RIGHT)
+            # configurar scrollbar
+            self.treeyscroll2.config(command=self.tree2.yview)
+
+            # TREEVIEW
+            self.tree2.config(xscrollcommand=self.treexscroll2.set, yscrollcommand=self.treeyscroll2.set, 
+            columns=(
+                    "col1"))
+
+        
+            self.tree2.column("#0", width=150, stretch= False)
+            self.tree2.column("col1", width=150, stretch= False)
+            
+            self.tree2.heading("#0", text="Id categoria", anchor=tk.CENTER)
+            self.tree2.heading("col1", text="Categoria", anchor=tk.CENTER)
+            
+            
+            self.tree2.pack()
+            self.treeview2 = self.tree2
+            
+            self.id = 0
+            self.iid = 0
+
+            self.tree2.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick_ca)
+            self.tree2.bind('<<TreeviewSelect>>', self.bindings_ca)
+
+            self.mostrar_ca()
+
+            
+
+        def mostrar_ca(self): #Actualizar treeview luego de modificar
+            
+            control_bd = bd()
+            datos_apt2 = control_bd.mostrar_categoria_material()
+            
+            registros2 = self.tree2.get_children()
+            for elemento2 in registros2:
+                self.tree2.delete(elemento2)
+            try:
+                self.indice= 1
+                for row2 in datos_apt2:			
+                    self.tree2.tag_configure("#ecf0f6", background="#ecf0f6")
+                    self.tree2.tag_configure("white", background="white")
+                    color = "white" if self.indice % 2 else "#ecf0f6"
+                    id_cliente2 = row2[0]
+                    
+                    self.tree2.insert("",END, tag=('fuente', color), iid=id_cliente2, text = row2[0], values =(row2[1]))
+                    self.indice= self.indice+1
+                            
+            except:
+                self.wm_attributes("-topmost", False)
+                print("ocurrio un error en mostrar_tabla_categoria")
+                self.wm_attributes("-topmost", True)
+
+
+        def limpiarCampos_ca(self):
+        
+            self.categoria_id_var.set("")
+            self.categoria_nombre_var.set("")
+            
+        
+        def seleccionarUsandoClick_ca(self, event):
+
+            item = self.tree2.identify('item', event.x, event.y)
+            self.categoria_id_var.set(self.tree2.item(item, "text"))
+            self.categoria_nombre_var.set(self.tree2.item(item, "values")[0])
+
+            print("you clicked on", self.tree2.item(item,"text"))
+            self.id_c = self.tree2.item(item,"text")
+            print(self.id_c)
+
+
+        def bindings_ca(self, event):
+            self.tree2.bind("<Button-1>", self.seleccionarUsandoClick_ca)
+
+        def anadir_material_ca(self):
+            control_bd = bd()
+
+            try:
+                if self.categoria_id_var.get() == '' or self.categoria_nombre_var.get()=='':
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
+                    self.wm_attributes("-topmost", True)
+                else:
+                    datos = self.categoria_id_var.get(), self.categoria_nombre_var.get()
+                    control_bd.anadir_mat_ca_bd(datos)
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showinfo("REALIZADO","Material anadido")
+                    self.wm_attributes("-topmost", True)
+        
+            except:
+                self.wm_attributes("-topmost", False)
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir material")
+                self.wm_attributes("-topmost", True)
+                pass
+
+            self.limpiarCampos_ca()
+            self.mostrar_ca()
+
+        def actualizar_categ(self):
+            control_bd = bd()
+
+            try:
+                datos_actualizar = self.categoria_id_var.get(), self.categoria_nombre_var.get(), self.id_c
+                control_bd.actualizar_material_ca(datos_actualizar)
+
+            except:
+                self.wm_attributes("-topmost", False)
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al actualizar el registro")
+                self.wm_attributes("-topmost", True)
+                pass
+            
+            self.limpiarCampos_ca()
+            self.mostrar_ca()
+
+        
+        def borrar_categ(self):
+            control_bd = bd()
+            try:
+                self.wm_attributes("-topmost", False)
+                if messagebox.askyesno(message="¿Realmente desea eliminar el registro?", title="ADVERTENCIA"):
+                    self.wm_attributes("-topmost", True)
+                    control_bd.borrar_material_ca(self.id_c)
+                self.wm_attributes("-topmost", True)
+
+            except:
+                self.wm_attributes("-topmost", False)
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al tratar de eliminar el registro")
+                self.wm_attributes("-topmost", True)
+                pass
+
+            self.limpiarCampos_ca()
+            self.mostrar_ca()
+
+
+        def busqueda_categ(self):
+            control_bd = bd()
+            
+            try:
+                self.criterio1 = ''
+                self.criterio = self.buscar_entry_cat_var.get()
+                print(self.criterio)
+                self.criterio1 = "%s" % self.criterio +"%"
+                self.datos = control_bd.busqueda_material_ca(self.criterio1)
+                print("Criterio1: ", self.criterio1)
+
+                if self.criterio1 == '%':
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    self.wm_attributes("-topmost", True)
+                    
+                elif self.criterio1 != '':
+                    numeros = []
+                    for row in self.datos:
+                        numeros.append(row[0])
+                        self.row_id = row[0]
+                    self.tree2.selection
+                    self.tree2.selection_set(self.tree2.tag_has(self.row_id))
+                    self.tree2.selection_set(numeros) # move selection
+                    self.tree2.focus(self.row_id) # move focus
+                    self.tree2.see(self.row_id)
+            except:
+                self.wm_attributes("-topmost", False)
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
+                self.wm_attributes("-topmost", True)
+                pass
+
+
+
+
+
 #CLASE MATERIAL
 
 class Clase_material(tk.Frame): 
@@ -1325,10 +1560,10 @@ class Clase_material(tk.Frame):
 
         self.frame_fondo = tk.Frame(self)
         self.frame_fondo.pack(expand=True)
-        self.frame_fondo.config(bg="#ecf0f6", width=1440, height=500)
+        self.frame_fondo.config(bg="#ecf0f6", width=1440, height=20)
 
         self.label_a= tk.Label(self.frame_fondo, bg="#ecf0f6", relief=tk.SUNKEN)
-        self.label_a.place(x=10, y=90, width=610, height= 225)  
+        self.label_a.place(x=10, y=90, width=610, height= 70)  
 
         #self.fondo = ImageTk.PhotoImage(Image.open("img/fondo_azul.jpg"))
         
@@ -1358,7 +1593,7 @@ class Clase_material(tk.Frame):
         #self.eliminar_ca = tk.Button(self, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 240) 
         #self.limpiar_ca = tk.Button(self, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 240) 
 
-        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorias", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 280) 
+        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorias", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 105) 
         
         #self.buscar_ca = tk.Button(self, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=115) 
 
@@ -1422,11 +1657,7 @@ class Clase_material(tk.Frame):
 
         self.buscar_entry_pro_var = StringVar()
         
-            
-
-
-
-            
+        
         #self.categoria_id_entry = tk.Entry(self, textvariable= self.categoria_id_var).place(x=260, y=150, width=250)
         #self.categoria_nombre_entry= tk.Entry(self, textvariable= self.categoria_nombre_var).place(x=260, y=190, width=250)
         
@@ -1473,7 +1704,7 @@ class Clase_material(tk.Frame):
             # Frame del treeview
         self.frame_treeview = tk.Frame(self.frame_fondo)
         self.frame_treeview.pack(fill=tk.Y, side=tk.BOTTOM)
-        self.frame_treeview.config(bg="white", width=20, height=30)
+        self.frame_treeview.config(bg="white", width=20, height=700)
 
         style = ttk.Style()
         style.configure("mystyle.Treeview",
@@ -1484,7 +1715,7 @@ class Clase_material(tk.Frame):
         )
 
                     # Set the treeview
-        self.tree = ttk.Treeview(self.frame_treeview, style="mystyle.Treeview", height=12)
+        self.tree = ttk.Treeview(self.frame_treeview, style="mystyle.Treeview", height=17) #height ALTURA DEL TREEVIEW
 
         self.treexscroll = tk.Scrollbar(self.frame_treeview, orient=tk.HORIZONTAL)
         self.treexscroll.pack(fill=tk.X, side=tk.BOTTOM)
@@ -1543,6 +1774,8 @@ class Clase_material(tk.Frame):
         self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick)
         self.tree.bind('<<TreeviewSelect>>', self.bindings)
 
+
+
         #GESTION DE PRODUCTOS FUNCIONES
 
     def mostrar(self): #Actualizar treeview luego de modificar
@@ -1569,126 +1802,13 @@ class Clase_material(tk.Frame):
                 pass
 
 
-
+        
+        
     def mostrar_tabla_categoria(self):
-        self.ventana_nueva1 = tk.Toplevel()
-        self.ventana_nueva1.geometry("700x700")
-        self.ventana_nueva1.title("Tabla categorias")
-        self.ventana_nueva1.configure(background="#ecf0f6")
-
-        self.frame_fondo_toplevel = tk.Frame(self.ventana_nueva1)
-        self.frame_fondo_toplevel.pack(expand=True)
-        self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=300)
-        
-        #Label fondo
-        self.label_a= tk.Label(self.frame_fondo_toplevel, bg="#ecf0f6", relief=tk.SUNKEN)
-        self.label_a.place(x=10, y=90, width=610, height= 225)
-        
-        #Stringvar
-        self.categoria_id_var = StringVar()   
-        self.categoria_nombre_var = StringVar() 
-
-        #Labels
-        self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)
-
-        self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=150)  
-        self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=190)
-        
-        #Entry
-        self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_pro_var).place(x=15, y=120, width=250)
-        self.categoria_id_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_id_var).place(x=260, y=150, width=250)
-        self.categoria_nombre_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.categoria_nombre_var).place(x=260, y=190, width=250)
-
-        #Buttom
-        self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=115) 
-
-        self.anadir_ca= tk.Button(self.frame_fondo_toplevel, text="Agregar",  bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 240) 
-        self.actualizar_ca = tk.Button(self.frame_fondo_toplevel, text="Actualizar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 240)
-        self.eliminar_ca = tk.Button(self.frame_fondo_toplevel, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 240) 
-        self.limpiar_ca = tk.Button(self.frame_fondo_toplevel, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 240) 
-
-        # Frame del treeview
-        self.frame_treeview2 = tk.Frame(self.ventana_nueva1)
-        self.frame_treeview2.pack(fill=tk.Y, side=tk.BOTTOM)
-        self.frame_treeview2.config(bg="white", width=20, height=30)
-
-        style2 = ttk.Style()
-        style2.configure("mystyle.Treeview",
-            background = "red",
-            foreground = "#303452",
-            rowheight = 30,
-            fieldbackground = "white"
-        )
-
-                    # Set the treeview
-        self.tree2 = ttk.Treeview(self.frame_treeview2, style="mystyle.Treeview", height=12)
-
-        self.treexscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.HORIZONTAL)
-        self.treexscroll2.pack(fill=tk.X, side=tk.BOTTOM)
-            # configurar scrollbar
-        self.treexscroll2.config(command=self.tree2.xview)
-
-        self.treeyscroll2 = tk.Scrollbar(self.frame_treeview2, orient=tk.VERTICAL)
-        self.treeyscroll2.pack(fill=tk.Y, side=tk.RIGHT)
-            # configurar scrollbar
-        self.treeyscroll2.config(command=self.tree2.yview)
-
-            # TREEVIEW
-        self.tree2.config(xscrollcommand=self.treexscroll2.set, yscrollcommand=self.treeyscroll2.set, 
-        columns=(
-                    "col1"))
-
-        
-        self.tree2.column("#0", width=150, stretch= False)
-        self.tree2.column("col1", width=150, stretch= False)
-            
-        self.tree2.heading("#0", text="Id categoria", anchor=tk.CENTER)
-        self.tree2.heading("col1", text="Categoria", anchor=tk.CENTER)
-            
-            
-        self.tree2.pack()
-        self.treeview2 = self.tree2
-            
-        self.id = 0
-        self.iid = 0
-
-        self.tree.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick_ca)
-        self.tree.bind('<<TreeviewSelect>>', self.bindings_ca)
-
-        control_bd = bd()
-        datos_apt2 = control_bd.mostrar_categoria_material()
-            
-        registros2 = self.tree2.get_children()
-        for elemento2 in registros2:
-            self.tree2.delete(elemento2)
-        try:
-            self.indice= 1
-            for row2 in datos_apt2:			
-                self.tree2.tag_configure("#ecf0f6", background="#ecf0f6")
-                self.tree2.tag_configure("white", background="white")
-                color = "white" if self.indice % 2 else "#ecf0f6"
-                id_cliente2 = row2[0]
-                    
-                self.tree2.insert("",END, tag=('fuente', color), iid=id_cliente2, text = row2[0], values =(row2[1]))
-                self.indice= self.indice+1
-                            
-        except:
-            print("ocurrio un error en mostrar_tabla_categoria")
-
-        def seleccionarUsandoClick_ca(self, event):
-            self.mostrar_tabla_categoria()
-        
-            item = self.tree2.identify('item', event.x, event.y)
-            self.categoria_id_var.set(self.tree2.item(item, "text"))
-            self.categoria_nombre_var.set(self.tree2.item(item, "values")[0])
-
-            print("you clicked on", self.tree2.item(item,"text"))
-            self.id_c = self.tree2.item(item,"text")
-            print(self.id_c)
-
-
-        def bindings_ca(self, event):
-            self.tree.bind("<Button-1>", self.seleccionarUsandoClick)
+            # Crear la ventana secundaria y pasar como argumento
+            # la función en la cual queremos recibir el dato
+            # ingresado.
+            self.ventana_nombre = VentanaCategoriaEnMateriales()
 
 
     def limpiarCampos(self):
@@ -1704,23 +1824,6 @@ class Clase_material(tk.Frame):
             self.precio_var.set("")
             self.ultima_entrada_var.set("")
             self.textBox.delete('1.0','end')
-
-    def limpiarCampo_ca(self):
-        
-            self.categoria_id_var.set("") 
-            self.categoria_nombre_var.set("") 
-            
-    
-    def seleccionarUsandoClick_ca(self, event):
-        self.mostrar_tabla_categoria()
-        
-        item = self.tree2.identify('item', event.x, event.y)
-        self.categoria_id_var.set(self.tree2.item(item, "text"))
-        self.categoria_nombre_var.set(self.tree2.item(item, "values")[0])
-
-        print("you clicked on", self.tree2.item(item,"text"))
-        self.id_c = self.tree2.item(item,"text")
-        print(self.id_c)
     
 
     def seleccionarUsandoClick(self, event):

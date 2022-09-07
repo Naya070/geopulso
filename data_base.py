@@ -248,10 +248,21 @@ class bd:
         self.datos = cursor.fetchall()
         return self.datos
 
+    def busqueda_material_ca(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_categoria_material FROM geopulso.categoria_material WHERE categoria_material_nombre LIKE '%s'" % (criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
     def anadir_mat_bd(self, datos):
         print(datos)
         cursor = self.connection.cursor()
         cursor.execute("""INSERT INTO `geopulso`.`material` (`id_material`, `categoria`, `producto`, `descripcion`, `marca`, `modelo`, `proveedor_id`, `cantidad`, `precio`, `ultima_entrada`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
+        self.connection.commit()
+
+    def anadir_mat_ca_bd(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("""INSERT INTO `geopulso`.`categoria_material` (`id_categoria_material`, `categoria_material_nombre`) VALUES ('%s', '%s')""" % (datos) )
         self.connection.commit()
 
     def actualizar_material(self, datos_actualizar):
@@ -259,9 +270,19 @@ class bd:
         cursor.execute("UPDATE `geopulso`.`material` SET `id_material` = '%s', `categoria`='%s', `producto`='%s', `descripcion`='%s', `marca`='%s', `modelo`='%s', `proveedor_id`='%s', `cantidad`='%s', `precio`='%s', `ultima_entrada`='%s', `comentarios`='%s'  WHERE (`id_material` = '%s')" % (datos_actualizar))
         self.connection.commit()
 
+    def actualizar_material_ca(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`categoria_material` SET `id_categoria_material` = '%s', `categoria_material_nombre`='%s' WHERE (`id_categoria_material` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
     def borrar_material(self, id_c):
         cursor = self.connection.cursor()
         cursor.execute("DELETE FROM geopulso.material WHERE (`id_material` = '%s')" % (id_c))
+        self.connection.commit()
+
+    def borrar_material_ca(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM geopulso.categoria_material WHERE (`id_categoria_material` = '%s')" % (id_c))
         self.connection.commit()
         
         
