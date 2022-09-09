@@ -27,8 +27,8 @@ from menu import Login1, Clase_menu, Clase_clientes, Clase_empleados, Clase_prov
 LargeFont = ("Verdana", 12)
 
 def options():
-     '''\n**************************************************************
-          Welcome to the GUI interface of the python program
+		'''\n**************************************************************
+				Welcome to the GUI interface of the python program
 **************************************************************'''
 
 
@@ -54,7 +54,7 @@ class PageContainer(tk.Tk):
 
 			frame.grid(row = 0, column = 0, sticky = "nsew") 
 
-		self.show_frame(Clase_material)
+		self.show_frame(Login1)
 
 	def show_frame(self, cont):
 
