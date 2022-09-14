@@ -284,5 +284,79 @@ class bd:
         cursor = self.connection.cursor()
         cursor.execute("DELETE FROM geopulso.categoria_material WHERE (`id_categoria_material` = '%s')" % (id_c))
         self.connection.commit()
+
+
+
+    
+
+    # FUNCIONES EQUIPO
+
+
+    #GESTION DE PRODUCTOS FUNCIONES
+    def mostrar_proveedores_para_equipo(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT `id_proveedores`, `nombre_empresa` FROM proveedores")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def mostrar_categoria_equipo(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.categoria_equipo")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def mostrar_categoria_equipo_segun_Id(self, id_c):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.categoria_equipo WHERE (`id_categoria_equipo` = '%s')" % (id_c))
+        datos_apt = cursor.fetchall()
+        return datos_apt
+    
+    def mostrar_equipo(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT * FROM geopulso.equipo")
+        datos_apt = cursor.fetchall()
+        return datos_apt
+
+    def busqueda_equipo(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_equipo FROM geopulso.equipo WHERE equipo LIKE '%s' OR descripcion LIKE '%s'" % (criterio1, criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def busqueda_equipo_ca(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_categoria_equipo FROM geopulso.categoria_equipo WHERE categoria_equipo_nombre LIKE '%s'" % (criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def anadir_eq_bd(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("""INSERT INTO `geopulso`.`equipo` (`id_equipo`, `categoria`, `equipo`, `descripcion`, `marca`, `modelo`, `proveedor_id`, `comentarios`) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')""" % (datos) )
+        self.connection.commit()
+
+    def anadir_eq_ca_bd(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("""INSERT INTO `geopulso`.`categoria_equipo` (`id_categoria_equipo`, `categoria_equipo_nombre`) VALUES ('%s', '%s')""" % (datos) )
+        self.connection.commit()
+
+    def actualizar_equipo(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo` SET `id_equipo` = '%s', `categoria`='%s', `equipo`='%s', `descripcion`='%s', `marca`='%s', `modelo`='%s', `proveedor_id`='%s', `comentarios`='%s'  WHERE (`id_equipo` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def actualizar_equipo_ca(self, datos_actualizar):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`categoria_equipo` SET `id_categoria_equipo` = '%s', `categoria_equipo_nombre`='%s' WHERE (`id_categoria_equipo` = '%s')" % (datos_actualizar))
+        self.connection.commit()
+
+    def borrar_equipo(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM geopulso.equipo WHERE (`id_equipo` = '%s')" % (id_c))
+        self.connection.commit()
+
+    def borrar_equipo_ca(self, id_c):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM geopulso.categoria_equipo WHERE (`id_categoria_equipo` = '%s')" % (id_c))
+        self.connection.commit()
         
         
