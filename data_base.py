@@ -292,7 +292,7 @@ class bd:
     # FUNCIONES EQUIPO
 
 
-    #GESTION DE PRODUCTOS FUNCIONES
+    #GESTION DE EQUIPO FUNCIONES
     def mostrar_proveedores_para_equipo(self):
         cursor= self.connection.cursor()
         cursor.execute("SELECT `id_proveedores`, `nombre_empresa` FROM proveedores")
@@ -359,4 +359,45 @@ class bd:
         cursor.execute("DELETE FROM geopulso.categoria_equipo WHERE (`id_categoria_equipo` = '%s')" % (id_c))
         self.connection.commit()
         
-        
+    def anadir_datos_depreciacion_lra(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo` SET `valor_activo` = '%s', `vida_util_activo_annos` = '%s', `valor_residual` = '%s' WHERE (`id_equipo` = '%s')" % (datos))
+        self.connection.commit()
+    
+    def anadir_depreciacion_lra(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo` SET `d_linea_recta_anual` = '%s' WHERE (`id_equipo` = '%s')" % (datos))
+        self.connection.commit()
+
+    def anadir_datos_depreciacion_lrm(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo` SET `valor_activo` = '%s', `vida_util_activo_meses` = '%s', `valor_residual` = '%s' WHERE (`id_equipo` = '%s')" % (datos))
+        self.connection.commit()
+    
+    def anadir_depreciacion_lrm(self, datos):
+        cursor = self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo` SET `d_linea_recta_mensual` = '%s' WHERE (`id_equipo` = '%s')" % (datos))
+        self.connection.commit()
+
+    def busqueda_equipo_depreciacion(self, criterio1):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id_equipo FROM geopulso.equipo WHERE equipo LIKE '%s'" % (criterio1))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def detectar_depreciacion(self, id_actual):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT d_linea_recta_anual, d_linea_recta_mensual, d_suma_digitos_anuales, d_reduccion_datos FROM geopulso.equipo WHERE (`id_equipo` = '%s')" % (id_actual))
+        self.datos = cursor.fetchall()
+        return self.datos
+
+    def poner_id_equipo(self, id_actual):
+        cursor= self.connection.cursor()
+        cursor.execute("UPDATE `geopulso`.`equipo_id` SET `id` = '%s' WHERE (`equipo_id` = 1)" % (id_actual))
+        self.connection.commit()
+
+    def tomar_id_equipo(self):
+        cursor= self.connection.cursor()
+        cursor.execute("SELECT id FROM geopulso.equipo_id WHERE (`equipo_id` = 1)")
+        self.datos = cursor.fetchall()
+        return self.datos

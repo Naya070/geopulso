@@ -2240,13 +2240,13 @@ class Clase_equipo(tk.Frame):
         
         #Depreciacion de equipo
         self.linea_recta_anual = tk.Button(self, text="Por linea recta anual", command = self.mostrar_ventana_depreciacion_LRA, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 210) 
-        self.Linea_recta_mensual = tk.Button(self, text="Por linea recta mensual", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 250)
+        self.Linea_recta_mensual = tk.Button(self, text="Por linea recta mensual",command = self.mostrar_ventana_depreciacion_LRM, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 250)
         self.suma_digitos_anuales = tk.Button(self, text="Por suma de los digitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 40, y = 290) 
         self.reduccion_datos = tk.Button(self, text="Por reduccion de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 330)  
 
 
-        self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
-        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
+        self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", command = self.Valor_Depreciacion_LRA, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
+        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", command = self.Valor_Depreciacion_LRM, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
         self.suma_digitos_anuales_gr = tk.Button(self, text="Ver grafica digitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290) 
         self.reduccion_datos_gr = tk.Button(self, text="Ver grafica reduccion de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330)  
 
@@ -2420,9 +2420,15 @@ class Clase_equipo(tk.Frame):
             # ingresado.
             self.ventana_nombre = VentanaCategoriaEnEquipo()
 
+
     def mostrar_ventana_depreciacion_LRA(self):
             
             self.ventana_depreciacion_LRA = VentanaDepreciacionLRA()
+
+
+    def mostrar_ventana_depreciacion_LRM(self):
+            
+            self.ventana_depreciacion_LRM = VentanaDepreciacionLRM()
 
 
     def limpiarCampos(self):
@@ -2469,9 +2475,50 @@ class Clase_equipo(tk.Frame):
             self.textBox.delete('1.0','end')
             self.textBox.insert('end', self.tree.item(item, "values")[6])
 
+            self.id_c = self.tree.item(item,"text")
+            self.lista_depreciacion = control_bd.detectar_depreciacion(self.id_c)
+
+            for self.dep in self.lista_depreciacion:
+                if self.dep[0] is not None:
+                    if len(self.dep[0]) < 1 or self.dep[0] == 0:
+                        self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", command = self.Valor_Depreciacion_LRA, bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
+                    if len(self.dep[0]) >= 1 and self.dep[0] != 0:
+                        self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", command = self.Valor_Depreciacion_LRA, bg='green', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
+                if self.dep[0] is None:
+                    self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", command = self.Valor_Depreciacion_LRA, bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
+
+
+                if self.dep[1] is not None:
+                    if len(self.dep[1]) < 1 or self.dep[1] == 0:
+                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250) 
+                    if len(self.dep[1]) >= 1 and self.dep[1] != 0:
+                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='green', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
+                if self.dep[1] is None:
+                    self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)  
+
+
+                if self.dep[2] is not None:
+                    if len(self.dep[2]) < 1 or self.dep[2] == 0:
+                        self.suma_digitos_anuales_gr = tk.Button(self, text="Ver grafica digitos anuales", bg='red', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290)  
+                    if len(self.dep[2]) >= 1 and self.dep[2] != 0:
+                        self.suma_digitos_anuales_gr = tk.Button(self, text="Ver grafica digitos anuales", bg='green', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290)  
+                if self.dep[2] is None:
+                    self.suma_digitos_anuales_gr = tk.Button(self, text="Ver grafica digitos anuales", bg='red', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290) 
+
+                if self.dep[3] is not None:
+                    if len(self.dep[3]) < 1 or self.dep[3] == 0:
+                        self.reduccion_datos_gr = tk.Button(self, text="Ver grafica reduccion de datos", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330)  
+                    if len(self.dep[3]) >= 1 and self.dep[3] != 0:
+                        self.reduccion_datos_gr = tk.Button(self, text="Ver grafica reduccion de datos", bg='green', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330) 
+                if self.dep[3] is None:
+                    self.reduccion_datos_gr = tk.Button(self, text="Ver grafica reduccion de datos", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330) 
+
+
+
             print("you clicked on", self.tree.item(item,"text"))
             self.id_c = self.tree.item(item,"text")
             print(self.id_c)
+            control_bd.poner_id_equipo(self.id_c)
             #self.tree.selection_set('0')
 			
     
@@ -2516,13 +2563,20 @@ class Clase_equipo(tk.Frame):
 
     def anadir_equipo(self):
         control_bd = bd()
+        print("A")
 
         try:
+            print("B")
             if self.id_equipo_var.get() == '' or self.combo_categoria.get()=='' or self.equipo_var.get()=='' or self.combo_proveedor.get()=='':
                 messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
             else:
-                datos = self.id_equipo_var.get(), self.combo_categoria_var, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.textBox.get(1.0, tk.END+"-1c")
-                control_bd.anadir_eq_bd(datos)
+                print("C")
+                print(self.id_equipo_var.get(), self.combo_categoria_var, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.textBox.get(1.0, tk.END+"-1c"))
+                self.data = self.id_equipo_var.get(), self.combo_categoria_var, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.textBox.get(1.0, tk.END+"-1c")
+                print("self.data", self.data)
+                print("D")
+                control_bd.anadir_eq_bd(self.data)
+                print("E")
                 messagebox.showinfo("REALIZADO","Material anadido")
         
         except:
@@ -2572,13 +2626,60 @@ class Clase_equipo(tk.Frame):
         self.limpiarCampos()
         self.mostrar()
 
-    #def fecha_poner(self):
-    # self.fecha = datetime.today().strftime('%d-%m-%Y')
-    # self.ultima_entrada_var.set(self.fecha)              
+    def Valor_Depreciacion_LRA(self):
+        print("Valor depreciacion anual")
+        control_bd = bd()
+        self.top = tk.Toplevel(self)
+        self.top.wm_attributes("-topmost", True)
+        self.top.geometry("640x200")
+        self.top.title("Tabla categorias")
+        self.top.configure(background="#ecf0f6")
+
+        self.frame_fondo_toplevel = tk.Frame(self.top)
+        self.frame_fondo_toplevel.pack(expand=True)
+        self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=50)
+
+        self.id = control_bd.tomar_id_equipo()
+        print("self.id", self.id[0][0])
+
+        self.lista_depreciacion = control_bd.detectar_depreciacion(self.id[0][0])
+
+        for self.dep in self.lista_depreciacion:
+            print(self.dep[0])
         
+        self.ver = tk.Label(self.frame_fondo_toplevel, text="Depreciacion por linea recta anual:", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
+        self.ver = tk.Label(self.frame_fondo_toplevel, text=str(self.dep[0]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=450, y=1)          
+
+
+    def Valor_Depreciacion_LRM(self):
+
+        print("Valor depreciacion mensual")
+        control_bd = bd()
+        self.top1 = tk.Toplevel(self)
+        self.top1.wm_attributes("-topmost", True)
+        self.top1.geometry("640x200")
+        self.top1.title("Tabla categorias")
+        self.top1.configure(background="#ecf0f6")
+
+        self.frame_fondo_toplevel1 = tk.Frame(self.top1)
+        self.frame_fondo_toplevel1.pack(expand=True)
+        self.frame_fondo_toplevel1.config(bg="#ecf0f6", width=900, height=50)
+
+        self.id = control_bd.tomar_id_equipo()
+        print("self.id", self.id[0][0])
+
+        self.lista_depreciacion1 = control_bd.detectar_depreciacion(self.id[0][0])
+
+        for self.dep1 in self.lista_depreciacion1:
+            print(self.dep1[1])
+        
+        self.ver1 = tk.Label(self.frame_fondo_toplevel1, text="Depreciacion por linea recta mensual:", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
+        self.ver1 = tk.Label(self.frame_fondo_toplevel1, text=str(self.dep1[1]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=450, y=1)        
 
 
 #DEPRECIACION DE EQUIPO
+
+#Ventana depreciacion por linea recta anual
 
 class VentanaDepreciacionLRA(tk.Toplevel):
         def __init__(self, *args, callback=None, **kwargs):
@@ -2608,7 +2709,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.depreciacion_anual_var = StringVar()
 
 
-            self.buscar_entry_cat_var = StringVar()
+            self.buscar_entry_var = StringVar()
 
             #Labels
             self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
@@ -2617,7 +2718,8 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.equipo = tk.Label(self.frame_fondo_toplevel, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=60)
             self.valor_equipo = tk.Label(self.frame_fondo_toplevel, text="Valor Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=100)  
             self.equipo_vida_util= tk.Label(self.frame_fondo_toplevel, text="Equipo Vida Util (años):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
-            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="Valor Residual (opcional):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="Valor Residual :", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="(Puede ser igual a cero)", font=("Arial",8), bg="#ecf0f6", fg="#303452" ).place(x=20, y=200)
             self.depreciacion_anual = tk.Label(self.frame_fondo_toplevel, text="Depreciacion anual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
 
             self.id_equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_id_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=130, y=60, width=150)
@@ -2626,7 +2728,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
 
 
             #Entry
-            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_cat_var).place(x=20, y=30, width=250)
+            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_var).place(x=20, y=30, width=250)
             
             self.valor_equipo_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_equipo_var).place(x=280, y=100, width=250)
             self.equipo_vida_util_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.equipo_vida_util_var).place(x=280, y=140, width=250)
@@ -2634,13 +2736,10 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.valor_residual_opcional_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_residual_opcional_var).place(x=280, y=180, width=250)
 
             #Buttom
-            self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
+            self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", command= self.busqueda , bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
 
             self.calcular_boton = tk.Button(self.frame_fondo_toplevel, text="Calcular", command= self.calcular, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 250, y = 220)
-            #self.anadir_ca= tk.Button(self.frame_fondo_toplevel, text="Agregar", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 15, y = 150) 
-            #self.actualizar_ca = tk.Button(self.frame_fondo_toplevel, text="Actualizar",bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 160, y = 150)
-            #self.eliminar_ca = tk.Button(self.frame_fondo_toplevel, text="Borrar", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 310, y = 150) 
-            #self.limpiar_ca = tk.Button(self.frame_fondo_toplevel, text="Limpiar campos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 460, y = 150) 
+            
 
             # Frame del treeview
             self.frame_treeview3 = tk.Frame(self)
@@ -2677,9 +2776,9 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.tree3.column("#0", width=150, stretch= False)
             self.tree3.column("col1", width=150, stretch= False)
             self.tree3.column("col2", width=150, stretch= False)
-            self.tree3.column("col3", width=150, stretch= False)
+            self.tree3.column("col3", width=190, stretch= False)
             self.tree3.column("col4", width=150, stretch= False)
-            self.tree3.column("col5", width=150, stretch= False)
+            self.tree3.column("col5", width=250, stretch= False)
             
             
             self.tree3.heading("#0", text="ID equipo", anchor=tk.CENTER)
@@ -2719,7 +2818,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
                     color = "white" if self.indice % 2 else "#ecf0f6"
                     id_cliente3 = row2[0]
                     
-                    self.tree3.insert("",END, tag=('fuente', color), iid=id_cliente3, text = row2[0], values =(row2[2],row2[8],row2[9],row2[11],row2[ 14]))
+                    self.tree3.insert("",END, tag=('fuente', color), iid=id_cliente3, text = row2[0], values =(row2[2],row2[8], str(row2[9]).replace('.',','),str(row2[11]).replace('.',','),str(row2[14]).replace('.',',')))
                     self.indice= self.indice+1
                             
             except:
@@ -2735,6 +2834,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             
             self.categoria_id_var.set(self.tree3.item(item, "text"))
             self.categoria_nombre_var.set(self.tree3.item(item, "values")[0])
+            
             self.valor_equipo_var.set(self.tree3.item(item, "values")[1])
             self.equipo_vida_util_var.set(self.tree3.item(item, "values")[2])
             self.valor_residual_opcional_var.set(self.tree3.item(item, "values")[3])
@@ -2750,9 +2850,335 @@ class VentanaDepreciacionLRA(tk.Toplevel):
 
 
         def calcular(self):
-            print("calcular")
+            control_bd = bd()
+            self.depreciacion_lra = 0
+            self.c =0
+
+            
+            print("a")
+            try:
+                if self.valor_equipo_var.get() == '' or self.equipo_vida_util_var.get()=='':
+                    print("b")
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir el valor del equipo y su vida util en anos")
+                    self.wm_attributes("-topmost", True)
+                if self.valor_equipo_var.get() != '' or self.equipo_vida_util_var.get()!='':
+                    if self.valor_residual_opcional_var.get() == '' or self.valor_residual_opcional_var.get() == None:
+                        self.a = float(self.valor_equipo_var.get().replace(',','.'))
+                        self.b = float(self.equipo_vida_util_var.get().replace(',','.'))
+                        print("c")
+                        
+                        self.depreciacion_lra = (self.a/self.b)
+                        self.dat = self.a, self.b, self.c, self.id_c
+                        control_bd.anadir_datos_depreciacion_lra(self.dat)
+
+                    if self.valor_residual_opcional_var.get() != '': 
+                        self.a = float(self.valor_equipo_var.get().replace(',','.'))
+                        self.b = float(self.equipo_vida_util_var.get().replace(',','.'))
+                        self.c = float(self.valor_residual_opcional_var.get().replace(',','.'))
+                        print("d")  
+                    
+                        self.depreciacion_lra = (self.a/self.b)-self.c
+                        print(self.depreciacion_lra)
+                        self.dat = self.a, self.b, self.c, self.id_c
+                        control_bd.anadir_datos_depreciacion_lra(self.dat)
+                        print("d")
+                
+                print("e")
+                self.datos = self.depreciacion_lra, self.id_c
+                control_bd.anadir_depreciacion_lra(self.datos)
+                self.mostrar_ca()
+                self.wm_attributes("-topmost", False)
+                messagebox.showinfo("REALIZADO","Material anadido")
+                self.wm_attributes("-topmost", True)
+                self.depreciacion_anual_var.set(self.depreciacion_lra)
+
+            except:
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir equipo")
+                    self.wm_attributes("-topmost", True)
+                    pass
+
+        def busqueda(self):
+            control_bd = bd()
+            
+
+            try:
+                self.criterio1 = ''
+                self.criterio = self.buscar_entry_var.get()
+                print(self.criterio)
+                self.criterio1 = "%s" % self.criterio +"%"
+                self.datos = control_bd.busqueda_equipo_depreciacion(self.criterio1)
+                print("Criterio1: ", self.criterio1)
+
+                if self.criterio1 == '%':
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    
+                elif self.criterio1 != '':
+                    numeros = []
+                    for row in self.datos:
+                        numeros.append(row[0])
+                        self.row_id = row[0]
+                    self.tree3.selection
+                    self.tree3.selection_set(self.tree3.tag_has(self.row_id))
+                    self.tree3.selection_set(numeros) # move selection
+                    self.tree3.focus(self.row_id) # move focus
+                    self.tree3.see(self.row_id)
+            except:
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
+                pass
+
+#Ventana depreciacion por linea recta mensual
+
+class VentanaDepreciacionLRM(tk.Toplevel):
+        def __init__(self, *args, callback=None, **kwargs):
+            super().__init__(*args, **kwargs)
+            
+            self.wm_attributes("-topmost", True)
+            self.geometry("640x800")
+            self.title("Tabla categorias")
+            self.configure(background="#ecf0f6")
+
+            self.frame_fondo_toplevel = tk.Frame(self)
+            self.frame_fondo_toplevel.pack(expand=True)
+            self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=400)
+
+            #Label fondo
+            self.label_a= tk.Label(self.frame_fondo_toplevel, bg="#ecf0f6", relief=tk.SUNKEN)
+            self.label_a.place(x=15, y=10, width=610, height= 350)
         
-            print(type(self.valor_equipo_var.get()))
-            self.equipo_vida_util_var.get()
-            self.valor_residual_opcional_var.get()
+            #Stringvar
+            self.categoria_id_var = StringVar()   
+            self.categoria_nombre_var = StringVar()
+            
+            self.valor_equipo_var = StringVar()
+            self.equipo_vida_util_var = StringVar()
+            self.valor_residual_opcional_var = StringVar()
+            
+            self.depreciacion_mensual_var = StringVar()
+
+
+            self.buscar_entry_var = StringVar()
+
+            #Labels
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
+
+            self.id_equipo = tk.Label(self.frame_fondo_toplevel, text="ID Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=60)  
+            self.equipo = tk.Label(self.frame_fondo_toplevel, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=60)
+            self.valor_equipo = tk.Label(self.frame_fondo_toplevel, text="Valor Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=100)  
+            self.equipo_vida_util= tk.Label(self.frame_fondo_toplevel, text="Equipo Vida Util (meses):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="Valor Residual :", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="(Puede ser igual a cero)", font=("Arial",8), bg="#ecf0f6", fg="#303452" ).place(x=20, y=200)
+            self.depreciacion_anual = tk.Label(self.frame_fondo_toplevel, text="Depreciacion mensual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
+
+            self.id_equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_id_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=130, y=60, width=150)
+            self.equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_nombre_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=390, y=60, width=220)
+            self.depreciacion_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.depreciacion_mensual_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=260, width=220)
+
+
+            #Entry
+            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_var).place(x=20, y=30, width=250)
+            
+            self.valor_equipo_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_equipo_var).place(x=280, y=100, width=250)
+            self.equipo_vida_util_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.equipo_vida_util_var).place(x=280, y=140, width=250)
+
+            self.valor_residual_opcional_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_residual_opcional_var).place(x=280, y=180, width=250)
+
+            #Buttom
+            self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", command= self.busqueda , bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
+
+            self.calcular_boton = tk.Button(self.frame_fondo_toplevel, text="Calcular", command= self.calcular, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 250, y = 220)
+            
+            # Frame del treeview
+            self.frame_treeview4 = tk.Frame(self)
+            self.frame_treeview4.pack(fill=tk.Y, side=tk.BOTTOM)
+            self.frame_treeview4.config(bg="white", width=20, height=30)
+
+            style2 = ttk.Style()
+            style2.configure("mystyle.Treeview",
+                background = "red",
+                foreground = "#303452",
+                rowheight = 30,
+                fieldbackground = "white"
+                )
+
+                    # Set the treeview
+            self.tree4 = ttk.Treeview(self.frame_treeview4, style="mystyle.Treeview", height=12)
+
+            self.treexscroll4 = tk.Scrollbar(self.frame_treeview4, orient=tk.HORIZONTAL)
+            self.treexscroll4.pack(fill=tk.X, side=tk.BOTTOM)
+            # configurar scrollbar
+            self.treexscroll4.config(command=self.tree4.xview)
+
+            self.treeyscroll4 = tk.Scrollbar(self.frame_treeview4, orient=tk.VERTICAL)
+            self.treeyscroll4.pack(fill=tk.Y, side=tk.RIGHT)
+            # configurar scrollbar
+            self.treeyscroll4.config(command=self.tree4.yview)
+
+            # TREEVIEW
+            self.tree4.config(xscrollcommand=self.treexscroll4.set, yscrollcommand=self.treeyscroll4.set, 
+            columns=(
+                    "col1", "col2", "col3", "col4", "col5"))
+
         
+            self.tree4.column("#0", width=150, stretch= False)
+            self.tree4.column("col1", width=150, stretch= False)
+            self.tree4.column("col2", width=150, stretch= False)
+            self.tree4.column("col3", width=190, stretch= False)
+            self.tree4.column("col4", width=150, stretch= False)
+            self.tree4.column("col5", width=250, stretch= False)
+            
+            
+            self.tree4.heading("#0", text="ID equipo", anchor=tk.CENTER)
+            self.tree4.heading("col1", text="equipo", anchor=tk.CENTER)
+            self.tree4.heading("col2", text="Valor del activo", anchor=tk.CENTER)
+            self.tree4.heading("col3", text="Vida util activo meses", anchor=tk.CENTER)
+            self.tree4.heading("col4", text="Valor residual", anchor=tk.CENTER)
+            self.tree4.heading("col5", text="Depreciacion linea recta mensual", anchor=tk.CENTER)
+            
+            
+            self.tree4.pack()
+            self.treeview4 = self.tree4
+            
+            self.id = 0
+            self.iid = 0
+
+            self.tree4.bind('<<TreeviewSelect>>', self.seleccionarUsandoClick_4)
+            self.tree4.bind('<<TreeviewSelect>>', self.bindings_4)
+
+            self.mostrar_ca()
+
+            
+
+        def mostrar_ca(self): #Actualizar treeview luego de modificar
+            
+            control_bd = bd()
+            datos_apt4 = control_bd.mostrar_equipo()
+            
+            registros4 = self.tree4.get_children()
+            for elemento4 in registros4:
+                self.tree4.delete(elemento4)
+            try:
+                self.indice= 1
+                for row4 in datos_apt4:		
+                    self.tree4.tag_configure("#ecf0f6", background="#ecf0f6")
+                    self.tree4.tag_configure("white", background="white")
+                    color = "white" if self.indice % 2 else "#ecf0f6"
+                    id_cliente4 = row4[0]
+                    
+                    self.tree4.insert("",END, tag=('fuente', color), iid=id_cliente4, text = row4[0], values =( str(row4[2]).replace('.',','), str(row4[8]).replace('.',','), str(row4[10]).replace('.',','),str(row4[11]).replace('.',','),str(row4[15]).replace('.',',')))
+                    self.indice= self.indice+1
+                            
+            except:
+                self.wm_attributes("-topmost", False)
+                print("ocurrio un error en mostrar_tabla_categoria")
+                self.wm_attributes("-topmost", True)
+
+
+        def seleccionarUsandoClick_4(self, event):
+            control_bd = bd()
+
+            item = self.tree4.identify('item', event.x, event.y)
+            
+            self.categoria_id_var.set(self.tree4.item(item, "text"))
+            self.categoria_nombre_var.set(self.tree4.item(item, "values")[0])
+            
+            self.valor_equipo_var.set(str(self.tree4.item(item, "values")[1]).replace('.',','))
+            self.equipo_vida_util_var.set(str(self.tree4.item(item, "values")[2]).replace('.',','))
+            self.valor_residual_opcional_var.set(str(self.tree4.item(item, "values")[3]).replace('.',','))
+            self.depreciacion_mensual_var.set(str(self.tree4.item(item, "values")[4]).replace('.',','))
+            
+            print("you clicked on", self.tree4.item(item,"text"))
+            self.id_c = self.tree4.item(item,"text")
+            print(self.id_c)
+            #self.tree.selection_set('0')
+
+        def bindings_4(self, event):
+            self.tree4.bind("<Button-1>", self.seleccionarUsandoClick_4)
+
+
+        def calcular(self):
+            control_bd = bd()
+            self.depreciacion_lrm = 0
+            self.c =0
+
+            
+            print("a")
+            try:
+                if self.valor_equipo_var.get() == '' or self.equipo_vida_util_var.get()=='':
+                    print("b")
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir el valor del equipo y su vida util en meses")
+                    self.wm_attributes("-topmost", True)
+                if self.valor_equipo_var.get() != '' or self.equipo_vida_util_var.get()!='':
+                    if self.valor_residual_opcional_var.get() == '' or self.valor_residual_opcional_var.get() == None:
+                        self.a = float(self.valor_equipo_var.get().replace(',','.'))
+                        self.a_r = round(self.a, 2)
+                        self.b = float(self.equipo_vida_util_var.get().replace(',','.'))
+                        self.b_r = round(self.b, 2)
+                        print("c")
+                        
+                        self.depreciacion_lrm = (self.a/self.b)
+                        self.depreciacion_lrm = round(self.depreciacion_lrm, 2)
+                        self.dat = self.a, self.b, self.c, self.id_c
+                        control_bd.anadir_datos_depreciacion_lrm(self.dat)
+
+                    if self.valor_residual_opcional_var.get() != '': 
+                        self.a = float(self.valor_equipo_var.get().replace(',','.'))
+                        self.a_r = round(self.a, 2)
+                        self.b = float(self.equipo_vida_util_var.get().replace(',','.'))
+                        self.b_r = round(self.b, 2)
+                        self.c = float(self.valor_residual_opcional_var.get().replace(',','.'))
+                        self.c_r = round(self.c, 2)
+                        print("d")  
+                    
+                        self.depreciacion_lrm = (self.a/self.b)-self.c
+                        print(self.depreciacion_lrm)
+                        self.depreciacion_lrm = round(self.depreciacion_lrm, 2)
+                        self.dat = self.depreciacion_lrm, self.id_c
+                        control_bd.anadir_depreciacion_lrm(self.dat)
+                        print("d")
+                
+                print("e")
+                self.datos = self.depreciacion_lrm, self.id_c
+                control_bd.anadir_depreciacion_lra(self.datos)
+                self.mostrar_ca()
+                self.wm_attributes("-topmost", False)
+                messagebox.showinfo("REALIZADO","Material anadido")
+                self.wm_attributes("-topmost", True)
+                self.depreciacion_mensual_var.set(str(self.depreciacion_lrm).replace('.',','))
+
+            except:
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir equipo")
+                    self.wm_attributes("-topmost", True)
+                    pass
+
+        def busqueda(self):
+            control_bd = bd()
+            
+
+            try:
+                self.criterio1 = ''
+                self.criterio = self.buscar_entry_var.get()
+                print(self.criterio)
+                self.criterio1 = "%s" % self.criterio +"%"
+                self.datos = control_bd.busqueda_equipo_depreciacion(self.criterio1)
+                print("Criterio1: ", self.criterio1)
+
+                if self.criterio1 == '%':
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    
+                elif self.criterio1 != '':
+                    numeros = []
+                    for row in self.datos:
+                        numeros.append(row[0])
+                        self.row_id = row[0]
+                    self.tree4.selection
+                    self.tree4.selection_set(self.tree4.tag_has(self.row_id))
+                    self.tree4.selection_set(numeros) # move selection
+                    self.tree4.focus(self.row_id) # move focus
+                    self.tree4.see(self.row_id)
+            except:
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error de búsqueda")
+                pass
