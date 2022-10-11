@@ -1,0 +1,1 @@
+SELECT * FROM geopulso.equipo_id;

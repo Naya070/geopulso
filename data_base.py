@@ -1,6 +1,4 @@
-from sqlite3 import connect
 import mysql.connector
-from datetime import datetime
 
 
 class bd:

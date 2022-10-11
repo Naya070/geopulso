@@ -2,17 +2,11 @@ from re import X
 import tkinter as tk
 from tkinter import BOTH, BOTTOM, DISABLED, END, LEFT, RIGHT, TOP, Y, X, StringVar, ttk
 from tkinter import messagebox
-from turtle import bgcolor, heading, left, right, width
 from tkinter import ttk
-from webbrowser import get
 from PIL import ImageTk, Image
 from datetime import datetime
-
 import tkinter.font as font
-
-#from clientes import Clase_clientes
 from data_base import bd
-import mysql.connector
 
 
 
@@ -171,6 +165,8 @@ class Login1(tk.Frame):
 
             else:
                 control_bd.colocar_usuario_escrito(entry_usuario_var.get())
+                entry_usuario_var.set("")
+                entry_contrase_var.set("")
                 #Subir a la base de datos el nombre ingresado del usuario escrito al hacer login
                 controller.show_frame(Clase_menu) # Entrar a la ventana principal
                 controller.protocol("WM_DELETE_WINDOW", salir)
@@ -190,9 +186,15 @@ class Login1(tk.Frame):
 
 
             try:
+                self.b = control_bd.buscar_usuario(nombre_usuario.get())
+                #Busca si el usuario escrito existe en base de datos y de existir devuelve su id
+                #Si el usuario no existe devuelve 0
 
                 if len(nombre_usuario.get()) < 1:
                     messagebox.showinfo("ADVERTENCIA","Coloque el nuevo nombre de usuario")
+
+                elif self.b != 0:
+                    messagebox.showinfo("ADVERTENCIA","El usuario ya existe")
 
                 elif len(clave.get()) < 1:
                     messagebox.showinfo("ADVERTENCIA","Coloque la contraseña")
@@ -210,7 +212,7 @@ class Login1(tk.Frame):
                     messagebox.showinfo("ADVERTENCIA","Coloque su correo")
 
                 elif len(clave_acceso.get()) < 1:
-                    messagebox.showinfo("ADVERTENCIA","Coloque la clave de acceso, pidala al gerente de la empresa")
+                    messagebox.showinfo("ADVERTENCIA","Coloque la clave de acceso, pídala al gerente de la empresa")
                     
                 elif clave.get() != clave_repetir.get():
                     messagebox.showinfo("ADVERTENCIA","Error en la confirmación de contraseña")
@@ -259,13 +261,13 @@ class Clase_menu(tk.Frame):
         datos_usuario = control_bd.tomar_datos_usuario(seleccion_id)
         print("datos_usuario:", datos_usuario )
             #ya tengo los datos del usuario que hizo Login
-        g = ("1","2","3"),("1","2","3"),("1","2","3")
 
+        """g = ("1","2","3"),("1","2","3"),("1","2","3")
         for datos in g:
                 print("Datos:", datos)
                 nombres = datos[0]
                 apellidos = datos[1]
-                usuario = datos[2]
+                usuario = datos[2]"""
 
 
 
@@ -283,7 +285,7 @@ class Clase_menu(tk.Frame):
         self.logo = ImageTk.PhotoImage(Image.open("img/geopulso2.jpg"))
         self.label_logo = tk.Label(self.frame_fondo, image= self.logo, bg='#303452').pack(side=BOTTOM)
             
-        datos_usuario_texto= ("\n\n Bienvenido al sistema de gestion de su empresa")
+        datos_usuario_texto= ("\n\n Bienvenido al sistema de gestión de su empresa")
             
         self.label_fondo = tk.Label(self.frame_fondo, text=datos_usuario_texto, font=("Cambria", 12, "bold"), bg='#ecf0f6', fg='#303452').pack(side=TOP, expand=False, fill=X)
         self.bajo_botones = tk.Label(self.frame_fondo, text="\n\n\n\n\n", bg='#ecf0f6').pack()
@@ -313,8 +315,6 @@ class Clase_menu(tk.Frame):
 
 
 
-
-
 class Clase_clientes(tk.Frame): 
     
     def __init__(self, parent, controller):
@@ -328,11 +328,6 @@ class Clase_clientes(tk.Frame):
         def mientras():
             pass
         
-        def salir():
-            self.master.destroy()
-            self.master.quit()
-        
-
         self.config(bg="#ecf0f6", width=2440, height=300)
 
         self.frame_fondo = tk.Frame(self)
@@ -361,7 +356,7 @@ class Clase_clientes(tk.Frame):
         self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(Clase_equipo), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
-        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
+        self.button_menu = tk.Button(self, text="Menú", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
         self.anadir = tk.Button(self, text="Añadir cliente", command = self.anadir_cliente, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 250) 
         self.actualizar_b = tk.Button(self, text="Actualizar", command = self.actualizar,bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 250)
@@ -372,6 +367,7 @@ class Clase_clientes(tk.Frame):
 
 
                 #Labels
+        self.seccion= tk.Label(self, text="Clientes", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=805, y=50)   
         self.modificar_datos= tk.Label(self, text="Modificar Datos", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
             
         self.nombres = tk.Label(self, text="Nombres:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=120)  
@@ -380,9 +376,9 @@ class Clase_clientes(tk.Frame):
         self.telefono = tk.Label(self, text="Teléfono:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=13, y=270)
         self.correo= tk.Label(self, text="Correo:", font=("Arial"), bg="#f3fbfe", fg="#303452" ).place(x=13, y=320) 
 
-        self.direccion_vivienda = tk.Label(self, text="Direccion de la vivienda:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=120)
+        self.direccion_vivienda = tk.Label(self, text="Dirección de la vivienda:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=120)
         self.empresa = tk.Label(self, text="Empresa en donde labora:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=170)
-        self.direccion_empresa = tk.Label(self, text="Direccion de la empresa:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=220)
+        self.direccion_empresa = tk.Label(self, text="Dirección de la empresa:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=220)
             
         self.comentarios= tk.Label(self, text="Comentarios:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=270)
             
@@ -481,9 +477,9 @@ class Clase_clientes(tk.Frame):
         self.tree.heading("col3", text="Cédula", anchor=tk.CENTER)
         self.tree.heading("col4", text="Teléfono", anchor=tk.CENTER)
         self.tree.heading("col5", text="Correo", anchor=tk.CENTER)
-        self.tree.heading("col6", text="Direccion de la vivienda", anchor=tk.CENTER)
+        self.tree.heading("col6", text="Dirección de la vivienda", anchor=tk.CENTER)
         self.tree.heading("col7", text= "Empresa", anchor=tk.CENTER)
-        self.tree.heading("col8", text="Direccion de la empresa", anchor=tk.CENTER)
+        self.tree.heading("col8", text="Dirección de la empresa", anchor=tk.CENTER)
         self.tree.heading("col9", text="Comentarios", anchor=tk.CENTER)
             
             
@@ -576,7 +572,7 @@ class Clase_clientes(tk.Frame):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
@@ -607,10 +603,10 @@ class Clase_clientes(tk.Frame):
             else:
                 datos = self.nombres_var.get(), self.apellidos_var.get(), self.cedula_var.get(), self.telefono_var.get(), self.correo_var.get(), self.direccion_vivienda_var.get(), self.empresa_var.get(), self.direccion_empresa_var.get(), self.textBox.get(1.0, tk.END+"-1c")
                 control_bd.anadir_cli_bd(datos)
-                messagebox.showinfo("REALIZADO","Cliente anadido")
+                messagebox.showinfo("REALIZADO","Cliente añadido")
         
         except:
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir cliente")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir cliente")
                 pass
 
         self.limpiarCampos()
@@ -641,7 +637,6 @@ class Clase_clientes(tk.Frame):
 
         self.limpiarCampos()
         self.mostrar()
-
 
 
 
@@ -687,7 +682,7 @@ class Clase_empleados(tk.Frame):
         self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(Clase_equipo),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=510, y=0)
         self.button_clientes = tk.Button(self, text="Clientes", command = lambda:controller.show_frame(Clase_clientes), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=680, y=0)
-        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=850, y=0)
+        self.button_menu = tk.Button(self, text="Menú", command = lambda:controller.show_frame(Clase_menu), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=850, y=0)
 
         self.anadir = tk.Button(self, text="Añadir empleado", command = self.anadir_empleados,bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 250) 
         self.actualizar_b = tk.Button(self, text="Actualizar", command = self.actualizar, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=2).place(x = 865, y = 250)
@@ -698,6 +693,7 @@ class Clase_empleados(tk.Frame):
 
 
                 #Labels
+        self.seccion= tk.Label(self, text="Empleados", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=805, y=50) 
         self.modificar_datos= tk.Label(self, text="Modificar Datos", font=("Arial"), bg="#ecf0f6",fg='#72729a' ).place(x=15, y=80)   
             
         self.nombres = tk.Label(self, text="Nombres:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=120)  
@@ -707,7 +703,7 @@ class Clase_empleados(tk.Frame):
         self.correo= tk.Label(self, text="Teléfono:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=320) 
 
         self.direccion_vivienda = tk.Label(self, text="Correo:", font=("Arial"), bg="white", fg="#303452" ).place(x=370, y=120)
-        self.empresa = tk.Label(self, text="Direccion de la vivienda:", font=("Arial"), bg="white", fg="#303452" ).place(x=370, y=170)
+        self.empresa = tk.Label(self, text="Dirección de la vivienda:", font=("Arial"), bg="white", fg="#303452" ).place(x=370, y=170)
         
             
         self.comentarios= tk.Label(self, text="Comentarios:", font=("Arial"), bg="white", fg="#303452" ).place(x=370, y=270)
@@ -799,7 +795,7 @@ class Clase_empleados(tk.Frame):
         self.tree.heading("col4", text="Cédula", anchor=tk.CENTER)
         self.tree.heading("col5", text="Teléfono", anchor=tk.CENTER)
         self.tree.heading("col6", text="Correo", anchor=tk.CENTER)
-        self.tree.heading("col7", text= "Direccion de la vivienda", anchor=tk.CENTER)
+        self.tree.heading("col7", text= "Dirección de la vivienda", anchor=tk.CENTER)
         self.tree.heading("col8", text="Comentarios", anchor=tk.CENTER)
             
             
@@ -890,7 +886,7 @@ class Clase_empleados(tk.Frame):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
@@ -921,10 +917,10 @@ class Clase_empleados(tk.Frame):
             else:
                 datos = self.nombres_var.get(), self.apellidos_var.get(), self.cargo_var.get(), self.cedula_var.get(), self.telefono_var.get(), self.correo_var.get(), self.direccion_vivienda_var.get(), self.textBox.get(1.0, tk.END+"-1c")
                 control_bd.anadir_empl_bd(datos)
-                messagebox.showinfo("REALIZADO","Empleado anadido")
+                messagebox.showinfo("REALIZADO","Empleado añadido")
         
         except:
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir empleado")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir empleado")
                 pass
 
         self.limpiarCampos()
@@ -955,10 +951,6 @@ class Clase_empleados(tk.Frame):
 
         self.limpiarCampos()
         self.mostrar()
-
-
-
-
 
 
 #CLASE PROVEEDORES
@@ -1009,7 +1001,7 @@ class Clase_proveedores(tk.Frame):
         self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(Clase_equipo), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
-        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
+        self.button_menu = tk.Button(self, text="Menú", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
         self.anadir = tk.Button(self, text="Añadir proveedor", command = self.anadir_proveedor, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 680, y = 250) 
         self.actualizar_b = tk.Button(self, text="Actualizar", command = self.actualizar,bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=2).place(x = 865, y = 250)
@@ -1020,13 +1012,14 @@ class Clase_proveedores(tk.Frame):
 
 
                 #Labels
+        self.seccion= tk.Label(self, text="Proveedores", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=805, y=50) 
         self.modificar_datos= tk.Label(self, text="Modificar Datos", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
             
         self.nombres = tk.Label(self, text="Nombre de la empresa:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=120)  
         self.apellidos = tk.Label(self, text="Producto o servicio ofrecido:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=170)
         self.cedula = tk.Label(self, text="Nombre del contacto de la empresa:", font=("Arial"), bg="#f6fbff", fg="#303452" ).place(x=13, y=220)
         self.telefono = tk.Label(self, text="Cargo del contacto de la empresa:", font=("Arial"), bg="#f5fafe", fg="#303452" ).place(x=13, y=270)
-        self.correo= tk.Label(self, text="Telefono:", font=("Arial"), bg="#f3fbfe", fg="#303452" ).place(x=13, y=320) 
+        self.correo= tk.Label(self, text="Teléfono:", font=("Arial"), bg="#f3fbfe", fg="#303452" ).place(x=13, y=320) 
 
         self.direccion_vivienda = tk.Label(self, text="Correo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=120)
         self.empresa = tk.Label(self, text="RIF:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=370, y=170)
@@ -1056,8 +1049,8 @@ class Clase_proveedores(tk.Frame):
             
         self.nombre_empresa_entry = tk.Entry(self, textvariable= self.nombre_empresa_var).place(x=15, y=145, width=250)
         self.producto_servicio_entry= tk.Entry(self, textvariable= self.producto_servicio_var).place(x=15, y=195, width=250)
-        self.nombre_contacto_entry = tk.Entry(self, textvariable= self.cargo_contacto_var).place(x=15, y=245, width=250)
-        self.cargo_contacto_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=295, width=250)
+        self.nombre_contacto_entry = tk.Entry(self, textvariable= self.nombre_contacto_var).place(x=15, y=245, width=250)
+        self.cargo_contacto_entry = tk.Entry(self, textvariable= self.cargo_contacto_var).place(x=15, y=295, width=250)
         self.telefono_entry = tk.Entry(self, textvariable= self.telefono_var).place(x=15, y=345, width=250)
 
         self.correo_entry= tk.Entry(self, textvariable= self.correo_var).place(x=370, y=145, width=250)
@@ -1127,7 +1120,7 @@ class Clase_proveedores(tk.Frame):
         self.tree.heading("col2", text="Producto o servicio", anchor=tk.CENTER)
         self.tree.heading("col3", text="Nombre del contacto de la empresa", anchor=tk.CENTER)
         self.tree.heading("col4", text="Cargo del contacto de la empresa", anchor=tk.CENTER)
-        self.tree.heading("col5", text="Telefono", anchor=tk.CENTER)
+        self.tree.heading("col5", text="Teléfono", anchor=tk.CENTER)
         self.tree.heading("col6", text="Correo", anchor=tk.CENTER)
         self.tree.heading("col7", text= "RIF", anchor=tk.CENTER)
         self.tree.heading("col8", text="Sitio web", anchor=tk.CENTER)
@@ -1222,7 +1215,7 @@ class Clase_proveedores(tk.Frame):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
@@ -1253,10 +1246,10 @@ class Clase_proveedores(tk.Frame):
             else:
                 datos = self.nombre_empresa_var.get(), self.producto_servicio_var.get(), self.nombre_contacto_var.get(), self.cargo_contacto_var.get(), self.telefono_var.get(), self.correo_var.get(), self.rif_var.get(), self.sitio_web_var.get(), self.textBox.get(1.0, tk.END+"-1c")
                 control_bd.anadir_pro_bd(datos)
-                messagebox.showinfo("REALIZADO","Proveedor anadido")
+                messagebox.showinfo("REALIZADO","Proveedor añadido")
         
         except:
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir proveedor")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir proveedor")
                 pass
 
         self.limpiarCampos()
@@ -1315,10 +1308,10 @@ class VentanaCategoriaEnMateriales(tk.Toplevel):
             self.buscar_entry_cat_var = StringVar()
 
             #Labels
-            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=1)
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=1)
 
-            self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=60)  
-            self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=100)
+            self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=60)  
+            self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=100)
 
             #Entry
             self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_cat_var).place(x=15, y=30, width=250)
@@ -1368,8 +1361,8 @@ class VentanaCategoriaEnMateriales(tk.Toplevel):
             self.tree2.column("#0", width=150, stretch= False)
             self.tree2.column("col1", width=150, stretch= False)
             
-            self.tree2.heading("#0", text="Id categoria", anchor=tk.CENTER)
-            self.tree2.heading("col1", text="Categoria", anchor=tk.CENTER)
+            self.tree2.heading("#0", text="Id categoría", anchor=tk.CENTER)
+            self.tree2.heading("col1", text="Categoría", anchor=tk.CENTER)
             
             
             self.tree2.pack()
@@ -1436,18 +1429,18 @@ class VentanaCategoriaEnMateriales(tk.Toplevel):
             try:
                 if self.categoria_id_var.get() == '' or self.categoria_nombre_var.get()=='':
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir id de la categoría y nombre de la categoría")
                     self.wm_attributes("-topmost", True)
                 else:
                     datos = self.categoria_id_var.get(), self.categoria_nombre_var.get()
                     control_bd.anadir_mat_ca_bd(datos)
                     self.wm_attributes("-topmost", False)
-                    messagebox.showinfo("REALIZADO","Material anadido")
+                    messagebox.showinfo("REALIZADO","Material añadido")
                     self.wm_attributes("-topmost", True)
         
             except:
                 self.wm_attributes("-topmost", False)
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir material")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir material")
                 self.wm_attributes("-topmost", True)
                 pass
 
@@ -1523,9 +1516,6 @@ class VentanaCategoriaEnMateriales(tk.Toplevel):
                 pass
 
 
-
-
-
 #Clase material
 
 class Clase_material(tk.Frame): 
@@ -1572,10 +1562,10 @@ class Clase_material(tk.Frame):
         self.button_proveedores = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_equipo = tk.Button(self, text="Equipo", command = lambda:controller.show_frame(Clase_equipo), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
-        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
+        self.button_menu = tk.Button(self, text="Menú", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
         
-        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorias", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 105) 
+        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorías", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 105) 
         
 
         self.anadir_pro = tk.Button(self, text="Añadir material",command = self.anadir_material, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 680, y = 610) 
@@ -1592,17 +1582,18 @@ class Clase_material(tk.Frame):
         
 
         #Labels
-        self.agregar_categoria= tk.Label(self, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
-        self.gestion_producto= tk.Label(self, text="Gestion de producto", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
+        self.seccion= tk.Label(self, text="Material", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=805, y=50) 
+        self.agregar_categoria= tk.Label(self, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
+        self.gestion_producto= tk.Label(self, text="Gestión de producto", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
             
         
         
         
         
         self.id_producto_label = tk.Label(self, text="ID producto:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=150)
-        self.categoria_label = tk.Label(self, text="Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=190)
+        self.categoria_label = tk.Label(self, text="Categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=190)
         self.producto_label = tk.Label(self, text="Producto:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=230)
-        self.descripcion_label = tk.Label(self, text="Descripcion:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=270)
+        self.descripcion_label = tk.Label(self, text="Descripción:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=270)
         self.marca_label = tk.Label(self, text="Marca:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=310)
         self.modelo_label = tk.Label(self, text="Modelo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=350)
         self.id_proveedor_label = tk.Label(self, text="ID proveedor:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=390)
@@ -1726,7 +1717,7 @@ class Clase_material(tk.Frame):
         self.tree.heading("col6", text="Id proveedor", anchor=tk.CENTER)
         self.tree.heading("col7", text= "cantidad", anchor=tk.CENTER)
         self.tree.heading("col8", text="precio", anchor=tk.CENTER)
-        self.tree.heading("col9", text="Ultima entrada", anchor=tk.CENTER)
+        self.tree.heading("col9", text="Última entrada", anchor=tk.CENTER)
         self.tree.heading("col10", text="Comentarios", anchor=tk.CENTER)
             
             
@@ -1847,7 +1838,7 @@ class Clase_material(tk.Frame):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
@@ -1873,21 +1864,38 @@ class Clase_material(tk.Frame):
 
 
     def anadir_material(self):
+        print(11)
         control_bd = bd()
+        print(11)
 
         try:
             if self.id_producto_var.get() == '' or self.combo_categoria.get()=='' or self.producto_var.get()=='' or self.combo_proveedor.get()=='':
-                messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
+                messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoría del producto, así como el id de su proveedor")
             else:
-                datos = self.id_producto_var.get(), self.combo_categoria_var, self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c")
+                print(1)
+                print(self.combo_categoria.get())
+                self.combo_ca = self.combo_categoria.get().split('-')
+                self.combo_ca = self.combo_ca[0]
+                print(self.combo_ca)
+
+                print(self.combo_proveedor.get())
+                self.combo_pr  = self.combo_proveedor.get().split('-')
+                self.combo_pr = self.combo_pr[0]
+                print(self.combo_pr)
+                
+                print(self.id_producto_var.get(), self.combo_ca, self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_pr, self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c"))
+                datos = self.id_producto_var.get(), self.combo_ca, self.producto_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_pr, self.cantidad_var.get(), self.precio_var.get(), self.ultima_entrada_var.get(), self.textBox.get(1.0, tk.END+"-1c")
+                print(datos)
                 control_bd.anadir_mat_bd(datos)
-                messagebox.showinfo("REALIZADO","Material anadido")
+                print(2)
+                messagebox.showinfo("REALIZADO","Material añadido")
+                self.limpiarCampos()
+                print(3)
         
         except:
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir material")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir material")
                 pass
 
-        self.limpiarCampos()
         self.mostrar()
 
 
@@ -1946,7 +1954,7 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
             
             self.wm_attributes("-topmost", True)
             self.geometry("640x600")
-            self.title("Tabla categorias")
+            self.title("Tabla categorías")
             self.configure(background="#ecf0f6")
 
             self.frame_fondo_toplevel = tk.Frame(self)
@@ -1964,10 +1972,10 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
             self.buscar_entry_cat_var = StringVar()
 
             #Labels
-            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=1)
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=1)
 
-            self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=60)  
-            self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=100)
+            self.categoria_id = tk.Label(self.frame_fondo_toplevel, text="ID de la Categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=60)  
+            self.categoria_nombre = tk.Label(self.frame_fondo_toplevel, text="Nombre de la categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=13, y=100)
 
             #Entry
             self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_cat_var).place(x=15, y=30, width=250)
@@ -2017,8 +2025,8 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
             self.tree2.column("#0", width=150, stretch= False)
             self.tree2.column("col1", width=150, stretch= False)
             
-            self.tree2.heading("#0", text="Id categoria", anchor=tk.CENTER)
-            self.tree2.heading("col1", text="Categoria", anchor=tk.CENTER)
+            self.tree2.heading("#0", text="Id categoría", anchor=tk.CENTER)
+            self.tree2.heading("col1", text="Categoría", anchor=tk.CENTER)
             
             
             self.tree2.pack()
@@ -2085,18 +2093,18 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
             try:
                 if self.categoria_id_var.get() == '' or self.categoria_nombre_var.get()=='':
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir Id de la categoría y nombre de la categoría.")
                     self.wm_attributes("-topmost", True)
                 else:
                     datos = self.categoria_id_var.get(), self.categoria_nombre_var.get()
                     control_bd.anadir_eq_ca_bd(datos)
                     self.wm_attributes("-topmost", False)
-                    messagebox.showinfo("REALIZADO","Nueva categoria agregada")
+                    messagebox.showinfo("REALIZADO","Nueva categoría agregada")
                     self.wm_attributes("-topmost", True)
         
             except:
                 self.wm_attributes("-topmost", False)
-                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir material")
+                messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir material")
                 self.wm_attributes("-topmost", True)
                 pass
 
@@ -2152,7 +2160,7 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
 
                 if self.criterio1 == '%':
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     self.wm_attributes("-topmost", True)
                     
                 elif self.criterio1 != '':
@@ -2172,8 +2180,6 @@ class VentanaCategoriaEnEquipo(tk.Toplevel):
                 pass
 
 
-
-
 #Clase equipo
 
 class Clase_equipo(tk.Frame): 
@@ -2185,12 +2191,9 @@ class Clase_equipo(tk.Frame):
         
         print("CLASE_EQUIPO") 
 
-
         def mientras():
             pass
         
-        
-
         self.config(bg="#ecf0f6", width=2440, height=300)
 
         self.frame_fondo = tk.Frame(self)
@@ -2223,45 +2226,46 @@ class Clase_equipo(tk.Frame):
         self.button_proveedores = tk.Button(self, text="Proveedores", command = lambda:controller.show_frame(Clase_proveedores), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20, height=1).place(x = 340, y = 0) 
         self.button_material = tk.Button(self, text="Material", command = lambda:controller.show_frame(Clase_material), bg='#72729a', fg='white', font=("Arial",10,"bold"),width=20,height=1).place(x=510, y=0)
         self.button_empleados = tk.Button(self, text="Empleados", command = lambda:controller.show_frame(Clase_empleados),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=680, y=0)
-        self.button_menu = tk.Button(self, text="Menu", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
+        self.button_menu = tk.Button(self, text="Menú", command = lambda:controller.show_frame(Clase_menu),bg='#72729a', fg='white', font=("Arial",10,"bold"), width=20,height=1).place(x=850, y=0)
 
 
-        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorias", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 105) 
+        self.mostrar_tabla_de_categoria = tk.Button(self, text="Mostrar tabla categorías", command = self.mostrar_tabla_categoria, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=25, height=1).place(x = 190, y = 105) 
         
 
         self.anadir_eq = tk.Button(self, text="Añadir equipo",command = self.anadir_equipo, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 680, y = 610) 
         self.actualizar_eq = tk.Button(self, text="Actualizar", command = self.actualizar, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 610)
         self.eliminar_eq = tk.Button(self, text="Eliminar equipo", command = self.borrar, bg='#72729a', fg='white', font=("Arial",10,"bold"),width=15, height=1).place(x = 680, y = 650) 
-        self.limpiar_eq = tk.Button(self, text="Limpiar equipo", command = self.limpiarCampos, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 650)  
+        self.limpiar_eq = tk.Button(self, text="Limpiar campos", command = self.limpiarCampos, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 865, y = 650)  
         
 
         self.buscar_eq = tk.Button(self, text="Buscar", command = self.busqueda, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=910, y=115) 
 
         
         #Depreciacion de equipo
-        self.linea_recta_anual = tk.Button(self, text="Por linea recta anual", command = self.mostrar_ventana_depreciacion_LRA, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 210) 
-        self.Linea_recta_mensual = tk.Button(self, text="Por linea recta mensual",command = self.mostrar_ventana_depreciacion_LRM, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 250)
-        self.suma_digitos_anuales = tk.Button(self, text="Por suma de los digitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 40, y = 290) 
-        self.reduccion_datos = tk.Button(self, text="Por reduccion de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 330)  
+        self.linea_recta_anual = tk.Button(self, text="Por línea recta anual", command = self.mostrar_ventana_depreciacion_LRA, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 210) 
+        self.Linea_recta_mensual = tk.Button(self, text="Por línea recta mensual",command = self.mostrar_ventana_depreciacion_LRM, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 250)
+        self.suma_digitos_anuales = tk.Button(self, text="Por suma de los dígitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 40, y = 290) 
+        self.reduccion_datos = tk.Button(self, text="Por reducción de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 40, y = 330)  
 
 
         self.linea_recta_anual_gr = tk.Button(self, text="Ver valor recta anual", command = self.Valor_Depreciacion_LRA, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 210) 
         self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", command = self.Valor_Depreciacion_LRM, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
-        self.suma_digitos_anuales_gr = tk.Button(self, text="Ver grafica digitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290) 
-        self.reduccion_datos_gr = tk.Button(self, text="Ver grafica reduccion de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330)  
+        self.suma_digitos_anuales_gr = tk.Button(self, text="Ver gráfica dígitos anuales", bg='#72729a', fg='white', font=("Arial",10,"bold"),width=29, height=1).place(x = 350, y = 290) 
+        self.reduccion_datos_gr = tk.Button(self, text="Ver gráfica reducción de datos", bg='#72729a', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 330)  
 
 
 
                 #Labels
-        self.agregar_categoria= tk.Label(self, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
-        self.depreciacion_equip= tk.Label(self, text="Depreciacion de equipo", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=170)   
-        self.gestion_equipo= tk.Label(self, text="Gestion de equipo", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
+        self.seccion= tk.Label(self, text="Equipo", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=805, y=50) 
+        self.agregar_categoria= tk.Label(self, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=80)   
+        self.depreciacion_equip= tk.Label(self, text="Depreciación de equipo", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=15, y=170)   
+        self.gestion_equipo= tk.Label(self, text="Gestión de equipo", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=650, y=80) 
         
         
         self.id_equipo_label = tk.Label(self, text="ID equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=150)
-        self.categoria_label = tk.Label(self, text="Categoria:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=200)
+        self.categoria_label = tk.Label(self, text="Categoría:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=200)
         self.equipo_label = tk.Label(self, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=250)
-        self.descripcion_label = tk.Label(self, text="Descripcion:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=300)
+        self.descripcion_label = tk.Label(self, text="Descripción:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=300)
         self.marca_label = tk.Label(self, text="Marca:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=350)
         self.modelo_label = tk.Label(self, text="Modelo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=400)
         self.id_proveedor_label = tk.Label(self, text="ID proveedor:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=640, y=450)
@@ -2362,9 +2366,9 @@ class Clase_equipo(tk.Frame):
         
             
         self.tree.heading("#0", text="Id equipo", anchor=tk.CENTER)
-        self.tree.heading("col1", text="Categoria", anchor=tk.CENTER)
+        self.tree.heading("col1", text="Categoría", anchor=tk.CENTER)
         self.tree.heading("col2", text="Equipo", anchor=tk.CENTER)
-        self.tree.heading("col3", text="Descripcion", anchor=tk.CENTER)
+        self.tree.heading("col3", text="Descripción", anchor=tk.CENTER)
         self.tree.heading("col4", text="Marca", anchor=tk.CENTER)
         self.tree.heading("col5", text="Modelo", anchor=tk.CENTER)
         self.tree.heading("col6", text="Id proveedor", anchor=tk.CENTER)
@@ -2490,11 +2494,11 @@ class Clase_equipo(tk.Frame):
 
                 if self.dep[1] is not None:
                     if len(self.dep[1]) < 1 or self.dep[1] == 0:
-                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250) 
+                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", command = self.Valor_Depreciacion_LRM, bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250) 
                     if len(self.dep[1]) >= 1 and self.dep[1] != 0:
-                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='green', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
+                        self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", command = self.Valor_Depreciacion_LRM, bg='green', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)
                 if self.dep[1] is None:
-                    self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)  
+                    self.Linea_recta_mensual_gr = tk.Button(self, text="Ver valor recta mensual", command = self.Valor_Depreciacion_LRM, bg='red', fg='white', font=("Arial",10,"bold"), width=29, height=1).place(x = 350, y = 250)  
 
 
                 if self.dep[2] is not None:
@@ -2566,24 +2570,34 @@ class Clase_equipo(tk.Frame):
         print("A")
 
         try:
+            print(self.combo_categoria.get())
+            self.combo_ca = self.combo_categoria.get().split('-')
+            self.combo_ca = self.combo_ca[0]
+            print(self.combo_ca)
+
+            print(self.combo_proveedor.get())
+            self.combo_pr  = self.combo_proveedor.get().split('-')
+            self.combo_pr = self.combo_pr[0]
+            print(self.combo_pr)
             print("B")
             if self.id_equipo_var.get() == '' or self.combo_categoria.get()=='' or self.equipo_var.get()=='' or self.combo_proveedor.get()=='':
                 messagebox.showwarning("ADVERTENCIA","Debe introducir id del producto, nombre y categoria del producto, asi como el id de su proveedor")
             else:
                 print("C")
-                print(self.id_equipo_var.get(), self.combo_categoria_var, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.textBox.get(1.0, tk.END+"-1c"))
-                self.data = self.id_equipo_var.get(), self.combo_categoria_var, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor_var, self.textBox.get(1.0, tk.END+"-1c")
+                print(self.id_equipo_var.get(), self.combo_categoria.get(), self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_proveedor.get(), self.textBox.get(1.0, tk.END+"-1c"))
+                self.data = self.id_equipo_var.get(), self.combo_ca, self.equipo_var.get(), self.descripcion_var.get(), self.marca_var.get(), self.modelo_var.get(), self.combo_pr, self.textBox.get(1.0, tk.END+"-1c")
                 print("self.data", self.data)
                 print("D")
                 control_bd.anadir_eq_bd(self.data)
                 print("E")
                 messagebox.showinfo("REALIZADO","Material anadido")
+                self.limpiarCampos()
         
         except:
                 messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir equipo")
                 pass
 
-        self.limpiarCampos()
+        
         self.mostrar()
 
 
@@ -2627,54 +2641,63 @@ class Clase_equipo(tk.Frame):
         self.mostrar()
 
     def Valor_Depreciacion_LRA(self):
-        print("Valor depreciacion anual")
-        control_bd = bd()
-        self.top = tk.Toplevel(self)
-        self.top.wm_attributes("-topmost", True)
-        self.top.geometry("640x200")
-        self.top.title("Tabla categorias")
-        self.top.configure(background="#ecf0f6")
+        try: 
+            print("self.id_c", self.id_c)
+        except:
+            messagebox.showwarning("ADVERTENCIA","Debe seleccionar un registro") 
+        else:
+            print("Valor depreciacion anual")
+            control_bd = bd()
+            self.top = tk.Toplevel(self)
+            self.top.wm_attributes("-topmost", True)
+            self.top.geometry("640x200")
+            self.top.title("Depreciacion por linea recta anual")
+            self.top.configure(background="#ecf0f6")
 
-        self.frame_fondo_toplevel = tk.Frame(self.top)
-        self.frame_fondo_toplevel.pack(expand=True)
-        self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=50)
+            self.frame_fondo_toplevel = tk.Frame(self.top)
+            self.frame_fondo_toplevel.pack(expand=True)
+            self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=50)
 
-        self.id = control_bd.tomar_id_equipo()
-        print("self.id", self.id[0][0])
+            self.id = control_bd.tomar_id_equipo()
+            print("self.id", self.id[0][0])
 
-        self.lista_depreciacion = control_bd.detectar_depreciacion(self.id[0][0])
+            self.lista_depreciacion = control_bd.detectar_depreciacion(self.id[0][0])
 
-        for self.dep in self.lista_depreciacion:
-            print(self.dep[0])
-        
-        self.ver = tk.Label(self.frame_fondo_toplevel, text="Depreciacion por linea recta anual:", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
-        self.ver = tk.Label(self.frame_fondo_toplevel, text=str(self.dep[0]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=450, y=1)          
+            for self.dep in self.lista_depreciacion:
+                print(self.dep[0])
+            
+            self.ver = tk.Label(self.frame_fondo_toplevel, text="Depreciacion por linea recta anual:", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
+            self.ver = tk.Label(self.frame_fondo_toplevel, text=str(self.dep[0]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=450, y=1)   
 
 
     def Valor_Depreciacion_LRM(self):
+        try: 
+            print("self.id_c", self.id_c)
+        except:
+            messagebox.showwarning("ADVERTENCIA","Debe seleccionar un registro") 
+        else:
+            print("Valor depreciacion mensual")
+            control_bd = bd()
+            self.topLRM = tk.Toplevel(self)
+            self.topLRM.wm_attributes("-topmost", True)
+            self.topLRM.geometry("640x200")
+            self.topLRM.title("Depreciacion por linea recta mensual")
+            self.topLRM.configure(background="#ecf0f6")
 
-        print("Valor depreciacion mensual")
-        control_bd = bd()
-        self.top1 = tk.Toplevel(self)
-        self.top1.wm_attributes("-topmost", True)
-        self.top1.geometry("640x200")
-        self.top1.title("Tabla categorias")
-        self.top1.configure(background="#ecf0f6")
+            self.frame_fondo_toplevel1 = tk.Frame(self.topLRM)
+            self.frame_fondo_toplevel1.pack(expand=True)
+            self.frame_fondo_toplevel1.config(bg="#ecf0f6", width=900, height=50)
 
-        self.frame_fondo_toplevel1 = tk.Frame(self.top1)
-        self.frame_fondo_toplevel1.pack(expand=True)
-        self.frame_fondo_toplevel1.config(bg="#ecf0f6", width=900, height=50)
+            self.id = control_bd.tomar_id_equipo()
+            print("self.id", self.id[0][0])
 
-        self.id = control_bd.tomar_id_equipo()
-        print("self.id", self.id[0][0])
+            self.lista_depreciacion1 = control_bd.detectar_depreciacion(self.id[0][0])
 
-        self.lista_depreciacion1 = control_bd.detectar_depreciacion(self.id[0][0])
-
-        for self.dep1 in self.lista_depreciacion1:
-            print(self.dep1[1])
-        
-        self.ver1 = tk.Label(self.frame_fondo_toplevel1, text="Depreciacion por linea recta mensual:", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
-        self.ver1 = tk.Label(self.frame_fondo_toplevel1, text=str(self.dep1[1]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=450, y=1)        
+            for self.dep1 in self.lista_depreciacion1:
+                print(self.dep1[1])
+            
+            self.ver1 = tk.Label(self.frame_fondo_toplevel1, text="Depreciacion por linea recta mensual: ", font=("Arial", 15, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1) 
+            self.ver2 = tk.Label(self.frame_fondo_toplevel1, text=str(self.dep1[1]), font=("Arial", 18, "bold"), bg="#ecf0f6", fg='#72729a' ).place(x=470, y=1)        
 
 
 #DEPRECIACION DE EQUIPO
@@ -2687,7 +2710,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             
             self.wm_attributes("-topmost", True)
             self.geometry("640x800")
-            self.title("Tabla categorias")
+            self.title("Ventana depreciación por línea recta anual")
             self.configure(background="#ecf0f6")
 
             self.frame_fondo_toplevel = tk.Frame(self)
@@ -2712,15 +2735,15 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.buscar_entry_var = StringVar()
 
             #Labels
-            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
 
             self.id_equipo = tk.Label(self.frame_fondo_toplevel, text="ID Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=60)  
             self.equipo = tk.Label(self.frame_fondo_toplevel, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=60)
             self.valor_equipo = tk.Label(self.frame_fondo_toplevel, text="Valor Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=100)  
-            self.equipo_vida_util= tk.Label(self.frame_fondo_toplevel, text="Equipo Vida Util (años):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
+            self.equipo_vida_util= tk.Label(self.frame_fondo_toplevel, text="Equipo Vida Útil (años):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
             self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="Valor Residual :", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
             self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="(Puede ser igual a cero)", font=("Arial",8), bg="#ecf0f6", fg="#303452" ).place(x=20, y=200)
-            self.depreciacion_anual = tk.Label(self.frame_fondo_toplevel, text="Depreciacion anual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
+            self.depreciacion_anual = tk.Label(self.frame_fondo_toplevel, text="Depreciación anual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
 
             self.id_equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_id_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=130, y=60, width=150)
             self.equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_nombre_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=390, y=60, width=220)
@@ -2784,9 +2807,9 @@ class VentanaDepreciacionLRA(tk.Toplevel):
             self.tree3.heading("#0", text="ID equipo", anchor=tk.CENTER)
             self.tree3.heading("col1", text="equipo", anchor=tk.CENTER)
             self.tree3.heading("col2", text="Valor del activo", anchor=tk.CENTER)
-            self.tree3.heading("col3", text="Vida util activo años", anchor=tk.CENTER)
+            self.tree3.heading("col3", text="Vida útil activo años", anchor=tk.CENTER)
             self.tree3.heading("col4", text="Valor residual", anchor=tk.CENTER)
-            self.tree3.heading("col5", text="Depreciacion linea recta anual", anchor=tk.CENTER)
+            self.tree3.heading("col5", text="Depreciación línea recta anual", anchor=tk.CENTER)
             
             
             self.tree3.pack()
@@ -2823,7 +2846,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
                             
             except:
                 self.wm_attributes("-topmost", False)
-                print("ocurrio un error en mostrar_tabla_categoria")
+                print("ocurrió un error en mostrar_tabla_categoria")
                 self.wm_attributes("-topmost", True)
 
 
@@ -2856,7 +2879,16 @@ class VentanaDepreciacionLRA(tk.Toplevel):
 
             
             print("a")
-            try:
+            try: 
+                print("self.id_c", self.id_c)
+                if int(self.id_c) <= 0:
+                    self.wm_attributes("-topmost", False)
+                    messagebox.showwarning("ADVERTENCIA","Debe seleccionar un equipo.")
+                    self.wm_attributes("-topmost", True)
+                #if int(self.id_c) <= 0:
+                #   self.wm_attributes("-topmost", False)
+                #   messagebox.showwarning("ADVERTENCIA","Debe colocar un numero mayor a cero en valor del equipo.")
+                #   self.wm_attributes("-topmost", True)
                 if self.valor_equipo_var.get() == '' or self.equipo_vida_util_var.get()=='':
                     print("b")
                     self.wm_attributes("-topmost", False)
@@ -2889,13 +2921,13 @@ class VentanaDepreciacionLRA(tk.Toplevel):
                 control_bd.anadir_depreciacion_lra(self.datos)
                 self.mostrar_ca()
                 self.wm_attributes("-topmost", False)
-                messagebox.showinfo("REALIZADO","Material anadido")
+                messagebox.showinfo("REALIZADO","Se calculó depreciación por línea recta anual")
                 self.wm_attributes("-topmost", True)
                 self.depreciacion_anual_var.set(self.depreciacion_lra)
 
             except:
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir equipo")
+                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir equipo")
                     self.wm_attributes("-topmost", True)
                     pass
 
@@ -2912,7 +2944,7 @@ class VentanaDepreciacionLRA(tk.Toplevel):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
@@ -2936,15 +2968,15 @@ class VentanaDepreciacionLRM(tk.Toplevel):
             
             self.wm_attributes("-topmost", True)
             self.geometry("640x800")
-            self.title("Tabla categorias")
+            self.title("Ventana depreciación por línea recta mensual")
             self.configure(background="#ecf0f6")
 
-            self.frame_fondo_toplevel = tk.Frame(self)
-            self.frame_fondo_toplevel.pack(expand=True)
-            self.frame_fondo_toplevel.config(bg="#ecf0f6", width=900, height=400)
+            self.frame_fondo_toplevelLRM = tk.Frame(self)
+            self.frame_fondo_toplevelLRM.pack(expand=True)
+            self.frame_fondo_toplevelLRM.config(bg="#ecf0f6", width=900, height=400)
 
             #Label fondo
-            self.label_a= tk.Label(self.frame_fondo_toplevel, bg="#ecf0f6", relief=tk.SUNKEN)
+            self.label_a= tk.Label(self.frame_fondo_toplevelLRM, bg="#ecf0f6", relief=tk.SUNKEN)
             self.label_a.place(x=15, y=10, width=610, height= 350)
         
             #Stringvar
@@ -2961,33 +2993,33 @@ class VentanaDepreciacionLRM(tk.Toplevel):
             self.buscar_entry_var = StringVar()
 
             #Labels
-            self.agregar_categoria= tk.Label(self.frame_fondo_toplevel, text="Agregar categoria", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
+            self.agregar_categoria= tk.Label(self.frame_fondo_toplevelLRM, text="Agregar categoría", font=("Arial"), bg="#ecf0f6", fg='#72729a' ).place(x=20, y=1)
 
-            self.id_equipo = tk.Label(self.frame_fondo_toplevel, text="ID Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=60)  
-            self.equipo = tk.Label(self.frame_fondo_toplevel, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=60)
-            self.valor_equipo = tk.Label(self.frame_fondo_toplevel, text="Valor Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=100)  
-            self.equipo_vida_util= tk.Label(self.frame_fondo_toplevel, text="Equipo Vida Util (meses):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
-            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="Valor Residual :", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
-            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevel, text="(Puede ser igual a cero)", font=("Arial",8), bg="#ecf0f6", fg="#303452" ).place(x=20, y=200)
-            self.depreciacion_anual = tk.Label(self.frame_fondo_toplevel, text="Depreciacion mensual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
+            self.id_equipo = tk.Label(self.frame_fondo_toplevelLRM, text="ID Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=60)  
+            self.equipo = tk.Label(self.frame_fondo_toplevelLRM, text="Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=60)
+            self.valor_equipo = tk.Label(self.frame_fondo_toplevelLRM, text="Valor Equipo:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=100)  
+            self.equipo_vida_util= tk.Label(self.frame_fondo_toplevelLRM, text="Equipo Vida Útil (meses):", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=140)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevelLRM, text="Valor Residual :", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=180)
+            self.valor_residual_opcional = tk.Label(self.frame_fondo_toplevelLRM, text="(Puede ser igual a cero)", font=("Arial",8), bg="#ecf0f6", fg="#303452" ).place(x=20, y=200)
+            self.depreciacion_anual = tk.Label(self.frame_fondo_toplevelLRM, text="Depreciación mensual:", font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=20, y=260)
 
-            self.id_equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_id_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=130, y=60, width=150)
-            self.equipo_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.categoria_nombre_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=390, y=60, width=220)
-            self.depreciacion_ver = tk.Label(self.frame_fondo_toplevel, textvariable=self.depreciacion_mensual_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=260, width=220)
+            self.id_equipo_ver = tk.Label(self.frame_fondo_toplevelLRM, textvariable=self.categoria_id_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=130, y=60, width=150)
+            self.equipo_ver = tk.Label(self.frame_fondo_toplevelLRM, textvariable=self.categoria_nombre_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=390, y=60, width=220)
+            self.depreciacion_ver = tk.Label(self.frame_fondo_toplevelLRM, textvariable=self.depreciacion_mensual_var, relief=tk.SUNKEN, font=("Arial"), bg="#ecf0f6", fg="#303452" ).place(x=300, y=260, width=220)
 
 
             #Entry
-            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevel, textvariable= self.buscar_entry_var).place(x=20, y=30, width=250)
+            self.buscar_entry_ca = tk.Entry(self.frame_fondo_toplevelLRM, textvariable= self.buscar_entry_var).place(x=20, y=30, width=250)
             
-            self.valor_equipo_entry = tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_equipo_var).place(x=280, y=100, width=250)
-            self.equipo_vida_util_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.equipo_vida_util_var).place(x=280, y=140, width=250)
+            self.valor_equipo_entry = tk.Entry(self.frame_fondo_toplevelLRM, textvariable= self.valor_equipo_var).place(x=280, y=100, width=250)
+            self.equipo_vida_util_entry= tk.Entry(self.frame_fondo_toplevelLRM, textvariable= self.equipo_vida_util_var).place(x=280, y=140, width=250)
 
-            self.valor_residual_opcional_entry= tk.Entry(self.frame_fondo_toplevel, textvariable= self.valor_residual_opcional_var).place(x=280, y=180, width=250)
+            self.valor_residual_opcional_entry= tk.Entry(self.frame_fondo_toplevelLRM, textvariable= self.valor_residual_opcional_var).place(x=280, y=180, width=250)
 
             #Buttom
-            self.buscar_ca = tk.Button(self.frame_fondo_toplevel, text="Buscar", command= self.busqueda , bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
+            self.buscar_ca = tk.Button(self.frame_fondo_toplevelLRM, text="Buscar", command= self.busqueda , bg='#72729a', fg='white', font=("Arial",10,"bold"), width=8, height=1).place(x=280, y=26) 
 
-            self.calcular_boton = tk.Button(self.frame_fondo_toplevel, text="Calcular", command= self.calcular, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 250, y = 220)
+            self.calcular_boton = tk.Button(self.frame_fondo_toplevelLRM, text="Calcular", command= self.calcular, bg='#72729a', fg='white', font=("Arial",10,"bold"), width=15, height=1).place(x = 250, y = 220)
             
             # Frame del treeview
             self.frame_treeview4 = tk.Frame(self)
@@ -3032,9 +3064,9 @@ class VentanaDepreciacionLRM(tk.Toplevel):
             self.tree4.heading("#0", text="ID equipo", anchor=tk.CENTER)
             self.tree4.heading("col1", text="equipo", anchor=tk.CENTER)
             self.tree4.heading("col2", text="Valor del activo", anchor=tk.CENTER)
-            self.tree4.heading("col3", text="Vida util activo meses", anchor=tk.CENTER)
+            self.tree4.heading("col3", text="Vida útil activo meses", anchor=tk.CENTER)
             self.tree4.heading("col4", text="Valor residual", anchor=tk.CENTER)
-            self.tree4.heading("col5", text="Depreciacion linea recta mensual", anchor=tk.CENTER)
+            self.tree4.heading("col5", text="Depreciacion línea recta mensual", anchor=tk.CENTER)
             
             
             self.tree4.pack()
@@ -3071,7 +3103,7 @@ class VentanaDepreciacionLRM(tk.Toplevel):
                             
             except:
                 self.wm_attributes("-topmost", False)
-                print("ocurrio un error en mostrar_tabla_categoria")
+                print("ocurrió un error en mostrar_tabla_categoria")
                 self.wm_attributes("-topmost", True)
 
 
@@ -3108,7 +3140,7 @@ class VentanaDepreciacionLRM(tk.Toplevel):
                 if self.valor_equipo_var.get() == '' or self.equipo_vida_util_var.get()=='':
                     print("b")
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Debe introducir el valor del equipo y su vida util en meses")
+                    messagebox.showwarning("ADVERTENCIA","Debe introducir el valor del equipo y su vida útil en meses")
                     self.wm_attributes("-topmost", True)
                 if self.valor_equipo_var.get() != '' or self.equipo_vida_util_var.get()!='':
                     if self.valor_residual_opcional_var.get() == '' or self.valor_residual_opcional_var.get() == None:
@@ -3144,13 +3176,13 @@ class VentanaDepreciacionLRM(tk.Toplevel):
                 control_bd.anadir_depreciacion_lra(self.datos)
                 self.mostrar_ca()
                 self.wm_attributes("-topmost", False)
-                messagebox.showinfo("REALIZADO","Material anadido")
+                messagebox.showinfo("REALIZADO","Material añadido")
                 self.wm_attributes("-topmost", True)
                 self.depreciacion_mensual_var.set(str(self.depreciacion_lrm).replace('.',','))
 
             except:
                     self.wm_attributes("-topmost", False)
-                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al anadir equipo")
+                    messagebox.showwarning("ADVERTENCIA","Ocurrió un error al añadir equipo")
                     self.wm_attributes("-topmost", True)
                     pass
 
@@ -3167,7 +3199,7 @@ class VentanaDepreciacionLRM(tk.Toplevel):
                 print("Criterio1: ", self.criterio1)
 
                 if self.criterio1 == '%':
-                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de busqueda")
+                    messagebox.showwarning("ADVERTENCIA","Coloque criterio de búsqueda")
                     
                 elif self.criterio1 != '':
                     numeros = []
